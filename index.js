@@ -26,6 +26,9 @@ app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/../'));
 app.use(express.static('public'));
 
+//use this middleware to be able to get the data from the form
+app.use(express.urlencoded({ extended: true }));
+
 app.get('/', (req, res) => {
     // res.send('this is the GET / route');
     res.render('home', {
@@ -37,6 +40,12 @@ app.get('/', (req, res) => {
 });
 app.post('/', (req, res) => {
     // res.send('this is the POST / route');
+    const first = req.body.first,
+        last = req.body.last,
+        sig = req.body.sig;
+
+    db.addSig(first, last, sig);
+
     res.redirect('/thanks');
 });
 app.get('/thanks', (req, res) => {
