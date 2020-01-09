@@ -1,18 +1,31 @@
-let c = $('canvas');
+let c = $('canvas'),
+    sig = $('input[name="sig"]'),
+    canvas = document.querySelector('canvas'),
+    ctx = canvas.getContext('2d');
 
 c.mouseenter(() => {
-    c.on('mousedown', e => {
-        var x = e.pageX - e.target.offsetLeft;
-        var y = e.pageY - e.target.offsetTop;
+    c.mousedown(e => {
+        let x = e.pageX - e.target.offsetLeft,
+            y = e.pageY - e.target.offsetTop;
 
-        c.mousemove(() => {
-            console.log('move: ', x, y);
+        c.mousemove(e => {
+            let newX = e.pageX - e.target.offsetLeft,
+                newY = e.pageY - e.target.offsetTop;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(newX, newY);
+            ctx.stroke();
+            (x = newX), (y = newY);
         });
     });
-    c.on('mouseup', () => {
+    c.mouseup(() => {
+        var dataURL = canvas.toDataURL();
+        sig.val(dataURL);
+        console.log(sig.val());
+
         c.unbind('mousemove');
     });
-    c.on('mouseleave', () => {
+    c.mouseleave(() => {
         c.unbind('mousemove');
     });
 });

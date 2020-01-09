@@ -54,11 +54,8 @@ app.post('/', (req, res) => {
                 err
             });
         });
-
-    // res.render('home', {
-    //     err
-    // });
 });
+
 app.get('/thanks', (req, res) => {
     // res.send('this is the GET /thanks route');
     res.render('thanks', {
