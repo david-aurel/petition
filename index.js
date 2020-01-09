@@ -13,26 +13,51 @@ const db = require('./db');
 //     })
 //     .then(data => console.log(data));
 
+//require modules
 const express = require('express'),
-    app = express();
+    app = express(),
+    hb = require('express-handlebars');
+
+// this configures express to use express handlebars
+app.engine('handlebars', hb());
+app.set('view engine', 'handlebars');
+
+// serves static files
+app.use(express.static(__dirname + '/../'));
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.send('this is the GET / route');
+    // res.send('this is the GET / route');
+    res.render('home', {
+        //if it's called 'main' and in /views, you could leave this out
+        //set it to 'layout: null' if you dont want to use a layout
+        layout: 'main'
+        // sending data to the front (home template)
+    });
 });
 app.post('/', (req, res) => {
-    res.send('this is the POST / route');
+    // res.send('this is the POST / route');
+    res.redirect('/thanks');
 });
 app.get('/thanks', (req, res) => {
-    res.send('this is the GET /thanks route');
+    // res.send('this is the GET /thanks route');
+    res.render('thanks', {
+        layout: 'main'
+    });
 });
 app.get('/signers', (req, res) => {
-    res.send('this is the GET /signers route');
+    // res.send('this is the GET /signers route');
+    res.render('signers', {
+        layout: 'main'
+    });
 });
 
+//listen
 app.listen(8080, () => console.log('listening...'));
 
-db.addSig('test first', 'test last', 'test sig')
-    .then(() => {
-        return db.getSigs();
-    })
-    .then(results => console.log(results));
+// // db query example
+// db.addSig('test first', 'test last', 'test sig')
+//     .then(() => {
+//         return db.getSigs();
+//     })
+//     .then(results => console.log(results));
