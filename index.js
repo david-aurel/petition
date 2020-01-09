@@ -1,4 +1,5 @@
 const db = require('./db');
+const functions = require('./functions');
 
 // // how you would make a query
 // db.addActor('test3', 99)
@@ -56,9 +57,18 @@ app.get('/thanks', (req, res) => {
 });
 app.get('/signers', (req, res) => {
     // res.send('this is the GET /signers route');
-    res.render('signers', {
-        layout: 'main'
-    });
+    functions
+        .filterResults()
+        .then(data => {
+            let sigs = data;
+            res.render('signers', {
+                layout: 'main',
+                sigs
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
 });
 
 //listen
