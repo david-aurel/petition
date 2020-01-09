@@ -19,7 +19,7 @@ const spicedPg = require('spiced-pg');
 //     return db.query(`DELETE FROM actors WHERE age = 99`);
 // };
 
-const db = spicedPg('postgres:postgres:postgres@localhost:5432/signatures');
+const db = spicedPg('postgres:postgres:postgres@localhost:5432/petition');
 
 exports.addSig = (first, last, sig) => {
     return db.query(
