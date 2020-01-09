@@ -30,3 +30,9 @@ app.get('/signers', (req, res) => {
 });
 
 app.listen(8080, () => console.log('listening...'));
+
+db.addSig('test first', 'test last', 'test sig')
+    .then(() => {
+        return db.getSigs();
+    })
+    .then(results => console.log(results));
