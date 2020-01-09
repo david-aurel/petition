@@ -1,6 +1,9 @@
 <h2>Description of the petition</h2>
 
 <div class="form-wrapper">
+    {{#if err}}
+    <p>Please fill the form.</p>
+    {{/if}}
     <form method="POST">
         <div class="nameInputWrapper">
             <input name='first' placeholder="first name">

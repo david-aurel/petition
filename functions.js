@@ -10,7 +10,7 @@ exports.filterResults = () => {
 
             signers.push(fullName);
         }
-        console.log('signers: ', signers);
+        // console.log('signers: ', signers);
         return signers;
     });
 };

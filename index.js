@@ -45,9 +45,19 @@ app.post('/', (req, res) => {
         last = req.body.last,
         sig = req.body.sig;
 
-    db.addSig(first, last, sig);
+    db.addSig(first, last, sig)
+        .then(() => {
+            res.redirect('/thanks');
+        })
+        .catch(err => {
+            res.render('home', {
+                err
+            });
+        });
 
-    res.redirect('/thanks');
+    // res.render('home', {
+    //     err
+    // });
 });
 app.get('/thanks', (req, res) => {
     // res.send('this is the GET /thanks route');
