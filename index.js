@@ -20,7 +20,8 @@ const express = require('express'),
     hb = require('express-handlebars'),
     //we use cookie session for cookies that can't be tampered with
     cookieSession = require('cookie-session'),
-    helmet = require('helmet');
+    helmet = require('helmet'),
+    csurf = require('csurf');
 
 // this configures express to use express handlebars
 app.engine('handlebars', hb());
@@ -29,13 +30,10 @@ app.set('view engine', 'handlebars');
 // serves static files
 app.use(express.static(__dirname + '/../'));
 app.use(express.static('public'));
-
 //helmet
 app.use(helmet());
-
-//use this middleware to be able to get the data from the form
+//use this middleware to get the data from the form
 app.use(express.urlencoded({ extended: true }));
-
 // use cookie session
 app.use(
     cookieSession({
@@ -43,6 +41,12 @@ app.use(
         maxAge: 1000 * 60 * 60 * 24 * 7 * 6
     })
 );
+//use csurf and set the csfr token
+app.use(csurf());
+app.use(function(req, res, next) {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
 
 app.get('/', (req, res) => {
     // res.send('this is the GET / route');
