@@ -20,7 +20,5 @@ c.mousedown(e => {
 c.mouseup(() => {
     var dataURL = canvas.toDataURL();
     sig.val(dataURL);
-    console.log(sig.val());
-
     c.unbind('mousemove');
 });
