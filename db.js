@@ -1,6 +1,6 @@
 const spicedPg = require('spiced-pg');
 
-// //   how you'd make a query and exporting it for other files to use
+// //     how you'd make a query and exporting it for other files to use
 // // spicedPg is just a wrapper for the node module for postgres. It takes a url. Here, the method, the user and the password is 'postgres'. Port is 5432. Name of db is petition.
 // const db = spicedPg('postgres:postgres:postgres@localhost:5432/actors');
 
