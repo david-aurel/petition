@@ -29,7 +29,8 @@ input {
     width: 100%;
 }
 
-canvas {
+canvas,
+.sigImg {
     border: 1px solid black;
     margin: 10px 0;
 }

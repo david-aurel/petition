@@ -31,3 +31,9 @@ exports.addSig = (first, last, sig) => {
 exports.getSigs = () => {
     return db.query(`SELECT * FROM signatures`).then(({ rows }) => rows);
 };
+
+exports.getThanks = id => {
+    return db
+        .query(`SELECT sig, first FROM signatures WHERE id = $1`, [id])
+        .then(({ rows }) => rows);
+};

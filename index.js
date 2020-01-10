@@ -64,6 +64,7 @@ app.post('/', (req, res) => {
     db.addSig(first, last, sig)
         .then(results => {
             let id = results.rows[0].id;
+
             req.session.id = id;
         })
         .then(() => {
@@ -78,12 +79,17 @@ app.post('/', (req, res) => {
 
 app.get('/thanks', (req, res) => {
     // res.send('this is the GET /thanks route');
-    functions.filterResults().then(data => {
-        let sigCount = data.length;
-        console.log(sigCount);
+    db.getThanks(req.session.id).then(thanksResults => {
+        functions.filterResults().then(names => {
+            let sigCount = names.length,
+                dataUrl = thanksResults[0].sig,
+                first = thanksResults[0].first;
 
-        res.render('thanks', {
-            sigCount
+            res.render('thanks', {
+                sigCount,
+                dataUrl,
+                first
+            });
         });
     });
 });
