@@ -19,7 +19,8 @@ const express = require('express'),
     app = express(),
     hb = require('express-handlebars'),
     //we use cookie session for cookies that can't be tampered with
-    cookieSession = require('cookie-session');
+    cookieSession = require('cookie-session'),
+    helmet = require('helmet');
 
 // this configures express to use express handlebars
 app.engine('handlebars', hb());
@@ -28,6 +29,9 @@ app.set('view engine', 'handlebars');
 // serves static files
 app.use(express.static(__dirname + '/../'));
 app.use(express.static('public'));
+
+//helmet
+app.use(helmet());
 
 //use this middleware to be able to get the data from the form
 app.use(express.urlencoded({ extended: true }));
