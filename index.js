@@ -106,8 +106,6 @@ app.get('/signers', (req, res) => {
     // res.send('this is the GET /signers route');
     db.getSigs()
         .then(data => {
-            console.log(data);
-
             res.render('signers', {
                 data
             });
