@@ -1,5 +1,7 @@
-<h2>Description of the petition</h2>
+<h2>Going trough the process of getting a job is pretty bad, he doesn't deserve this!</h2>
 
+<a href="/signers">Click here to see what other people say about him</a>
+<p>Your signature will contribute to raise awareness</p>
 <div class="form-wrapper">
     {{#if err}}
     <p>Please fill the form.</p>
@@ -12,10 +14,12 @@
         <input type='hidden' name="sig">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <textarea name="msg" cols="30" rows="5" placeholder="your message"></textarea>
-        <canvas></canvas>
+        <div class="canvasWrapper">
+            <canvas></canvas>
+            <p>signature</p>
+        </div>
         <button>submit</button>
     </form>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="script.js"></script>

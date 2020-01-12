@@ -1,10 +1,11 @@
-<h1>All people that signed:</h1>
-
-{{#sigs}}
+{{#data}}
 <ul>
     <li>
-        <h4>{{this.fullName}} says "{{this.message}}"</h4>
+        <h4>{{this.first}} {{this.last}} says "{{this.msg}}" <span class="time">{{this.time}}</span>
+        </h4>
     </li>
 
 </ul>
-{{/sigs}}
+{{/data}}
+
+<script src="time.js"></script>

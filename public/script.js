@@ -13,6 +13,7 @@ c.mousedown(e => {
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineTo(newX, newY);
+        ctx.strokeStyle = 'red';
         ctx.stroke();
         (x = newX), (y = newY);
     });

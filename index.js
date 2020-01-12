@@ -67,9 +67,10 @@ app.post('/', (req, res) => {
     const first = req.body.first,
         last = req.body.last,
         msg = req.body.msg,
-        sig = req.body.sig;
+        sig = req.body.sig,
+        time = new Date();
     // add signature from req.body into the db. then add id to a cookie. then redirect. unless there's an error, then, render home again, but with an err=true, so handlebars can render something else
-    db.addSig(first, last, msg, sig)
+    db.addSig(first, last, msg, sig, time)
         .then(results => {
             let id = results.rows[0].id;
 
@@ -103,13 +104,12 @@ app.get('/thanks', (req, res) => {
 });
 app.get('/signers', (req, res) => {
     // res.send('this is the GET /signers route');
-    //filter results from db down to an array of concatted first and last names
-    functions
-        .filterResults()
+    db.getSigs()
         .then(data => {
-            let sigs = data;
+            console.log(data);
+
             res.render('signers', {
-                sigs
+                data
             });
         })
         .catch(err => {
