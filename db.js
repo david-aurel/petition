@@ -21,10 +21,10 @@ const spicedPg = require('spiced-pg');
 
 const db = spicedPg('postgres:postgres:postgres@localhost:5432/petition');
 
-exports.addSig = (first, last, sig) => {
+exports.addSig = (first, last, msg, sig) => {
     return db.query(
-        `INSERT INTO signatures (first, last, sig) VALUES($1, $2, $3) RETURNING id`,
-        [first, last, sig]
+        `INSERT INTO signatures (first, last, msg, sig) VALUES($1, $2, $3, $4) RETURNING id`,
+        [first, last, msg, sig]
     );
 };
 

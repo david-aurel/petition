@@ -66,10 +66,10 @@ app.post('/', (req, res) => {
     // res.send('this is the POST / route');
     const first = req.body.first,
         last = req.body.last,
+        msg = req.body.msg,
         sig = req.body.sig;
-
     // add signature from req.body into the db. then add id to a cookie. then redirect. unless there's an error, then, render home again, but with an err=true, so handlebars can render something else
-    db.addSig(first, last, sig)
+    db.addSig(first, last, msg, sig)
         .then(results => {
             let id = results.rows[0].id;
 
