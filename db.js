@@ -44,3 +44,9 @@ exports.addUser = (first, last, email, pass) => {
         [first, last, email, pass]
     );
 };
+
+exports.getUser = email => {
+    return db
+        .query(`SELECT * FROM users WHERE email = $1`, [email])
+        .then(({ rows }) => rows);
+};

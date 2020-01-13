@@ -52,7 +52,7 @@ app.use(function(req, res, next) {
 app.get('/', (req, res) => {
     // res.send('this is the GET / route');
     //check if the user has an id in the cookies already, if yes, send him to the thanks page
-    if (req.session.id) {
+    if (req.session.sigId) {
         res.redirect('/thanks');
     } else {
         functions.filterResults().then(names => {
@@ -75,21 +75,19 @@ app.post('/', (req, res) => {
         .then(results => {
             let id = results.rows[0].id;
 
-            req.session.id = id;
+            req.session.sigId = id;
         })
         .then(() => {
             res.redirect('/thanks');
         })
         .catch(err => {
-            res.render('home', {
-                err
-            });
+            res.render('home', { err });
         });
 });
 
 app.get('/thanks', (req, res) => {
     // res.send('this is the GET /thanks route');
-    db.getThanks(req.session.id).then(thanksResults => {
+    db.getThanks(req.session.sigId).then(thanksResults => {
         functions.filterResults().then(names => {
             let sigCount = names.length,
                 dataUrl = thanksResults[0].sig,
@@ -138,6 +136,30 @@ app.post('/register', (req, res) => {
     });
 });
 
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
+app.post('/login', (req, res) => {
+    db.getUser(req.body.email)
+        .then(user => {
+            bcrypt.compare(req.body.pass, user[0].pass).then(match => {
+                if (match) {
+                    db.getUser(req.body.email).then(rows => {
+                        req.session.userId = rows[0].id;
+                        console.log(req.session.userId);
+                        console.log(req.session);
+                    });
+                    res.redirect('/');
+                } else {
+                    res.render('login', { wrongPass: true });
+                }
+            });
+        })
+        .catch(err => {
+            res.render('login', { err });
+        });
+});
 //listen
 app.listen(8080, () => console.log('listening...'));
 
