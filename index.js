@@ -71,12 +71,14 @@ app.post('/', (req, res) => {
             res.redirect('/thanks');
         })
         .catch(err => {
+            console.log(err);
+
             res.render('home', { err });
         });
 });
 
 app.get('/thanks', (req, res) => {
-    // console.log('this is the GET /thanks route');
+    console.log('this is the GET /thanks route');
     // render the thanks page with some info from the signature and number of total signatures
     db.getThanks(req.session.sigId).then(thanksResults => {
         functions.filterResults().then(names => {
@@ -114,7 +116,7 @@ app.get('/register', (req, res) => {
 
 app.post('/register', (req, res) => {
     //console.log('this is the POST /register route')
-    // salt, hash and store the password in the db, together with the rest of the inputs. also set a cookie, i.e. log the user in.
+    // salt, hash and store the password in the db, together with the rest of the inputs. also set a cookie, i.e. log the user in and add first and last to cookie.
     bcrypt.hash(req.body.pass).then(hashedPass => {
         let first = req.body.first,
             last = req.body.last,
@@ -122,7 +124,6 @@ app.post('/register', (req, res) => {
 
         req.session.first = req.body.first;
         req.session.last = req.body.last;
-        console.log(req.session);
         db.addUser(first, last, email, hashedPass)
             .then(({ rows }) => {
                 req.session.userId = rows[0].id;
@@ -144,12 +145,14 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res) => {
     //console.log('this is the POST /login route')
-    //get information about the email provided from the db and check the password. if it checks out, log the user in by setting a cookie. if it doesnt, show 'wrong password'. if there isn't even a matching email in the db, show 'user doesn't exist'
+    //get information about the email provided from the db and check the password. if it checks out, log the user in by setting a cookie. if it doesnt, show 'wrong password'. if there isn't even a matching email in the db, show 'user doesn't exist'.
     db.getUser(req.body.email)
         .then(user => {
             bcrypt.compare(req.body.pass, user[0].pass).then(match => {
                 if (match) {
                     req.session.userId = user[0].id;
+                    req.session.first = user[0].first;
+                    req.session.last = user[0].last;
                     res.redirect('/');
                 } else {
                     res.render('login', { wrongPass: true });
