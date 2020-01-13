@@ -1,28 +1,16 @@
-const db = require('./db');
-const functions = require('./functions');
+// require other scripts
+const db = require('./db'),
+    functions = require('./functions'),
+    bcrypt = require('./bcrypt.js');
 
-// // how you would make a query
-// db.addActor('test3', 99)
-//     .then(() => {
-//         return db.getActors();
-//     })
-//     .then(data => console.log(data));
-
-// db.deleteActors()
-//     .then(() => {
-//         return db.getActors();
-//     })
-//     .then(data => console.log(data));
-
-//require modules
+// require modules
 const express = require('express'),
     app = express(),
     hb = require('express-handlebars'),
-    //we use cookie session for cookies that can't be tampered with
+    // we use cookie session for cookies that can't be tampered with
     cookieSession = require('cookie-session'),
     helmet = require('helmet'),
-    csurf = require('csurf'),
-    bcrypt = require('./bcrypt.js');
+    csurf = require('csurf');
 
 // this configures express to use express handlebars
 app.engine('handlebars', hb());
@@ -31,18 +19,18 @@ app.set('view engine', 'handlebars');
 // serves static files
 app.use(express.static(__dirname + '/../'));
 app.use(express.static('public'));
-//helmet
+// helmet
 app.use(helmet());
-//use this middleware to get the data from the form
+// this gets the data from the form
 app.use(express.urlencoded({ extended: true }));
-// use cookie session
+// cookie session
 app.use(
     cookieSession({
         secret: `I'm always angry.`,
         maxAge: 1000 * 60 * 60 * 24 * 7 * 6
     })
 );
-//use csurf and set the csfr token
+//csurf and the csfr token
 app.use(csurf());
 app.use(function(req, res, next) {
     res.locals.csrfToken = req.csrfToken();
@@ -50,8 +38,8 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', (req, res) => {
-    // res.send('this is the GET / route');
-    //check if the user has an id in the cookies already, if yes, send him to the thanks page
+    // console.log('this is the GET / route');
+    //check if the user is logged in and send him to register if not. Check if he's signed the petition, if yes, send him to the thanks page, if not, send him to sign the petition
     if (!req.session.userId) {
         res.redirect('/register');
     } else if (!req.session.sigId) {
@@ -65,18 +53,16 @@ app.get('/', (req, res) => {
         res.redirect('/thanks');
     }
 });
+
 app.post('/', (req, res) => {
-    // res.send('this is the POST / route');
+    // console.log('this is the POST / route');
     const first = req.session.first,
         last = req.session.last,
         msg = req.body.msg,
         sig = req.body.sig,
         time = new Date();
-    console.log(req.session);
 
-    console.log(first, last);
-
-    // add signature from req.body into the db. then add id to a cookie. then redirect. unless there's an error, then, render home again, but with an err=true, so handlebars can render something else
+    // Insert the signature into db. then add sigId to cookie and then redirect. unless there's an error, then, render home again, but with an err=true, so handlebars can render something else
     db.addSig(req.session.userId, first, last, msg, sig, time)
         .then(results => {
             req.session.sigId = results.rows[0].id;
@@ -90,7 +76,8 @@ app.post('/', (req, res) => {
 });
 
 app.get('/thanks', (req, res) => {
-    // res.send('this is the GET /thanks route');
+    // console.log('this is the GET /thanks route');
+    // render the thanks page with some info from the signature and number of total signatures
     db.getThanks(req.session.sigId).then(thanksResults => {
         functions.filterResults().then(names => {
             let sigCount = names.length,
@@ -105,8 +92,10 @@ app.get('/thanks', (req, res) => {
         });
     });
 });
+
 app.get('/signers', (req, res) => {
-    // res.send('this is the GET /signers route');
+    // console.log('this is the GET /signers route');
+    // render signers page with info from db
     db.getSigs()
         .then(data => {
             res.render('signers', {
@@ -119,10 +108,13 @@ app.get('/signers', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
+    //console.log('this is the GET /register route')
     res.render('register');
 });
 
 app.post('/register', (req, res) => {
+    //console.log('this is the POST /register route')
+    // salt, hash and store the password in the db, together with the rest of the inputs. also set a cookie, i.e. log the user in.
     bcrypt.hash(req.body.pass).then(hashedPass => {
         let first = req.body.first,
             last = req.body.last,
@@ -146,10 +138,13 @@ app.post('/register', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
+    //console.log('this is the GET /login route')
     res.render('login');
 });
 
 app.post('/login', (req, res) => {
+    //console.log('this is the POST /login route')
+    //get information about the email provided from the db and check the password. if it checks out, log the user in by setting a cookie. if it doesnt, show 'wrong password'. if there isn't even a matching email in the db, show 'user doesn't exist'
     db.getUser(req.body.email)
         .then(user => {
             bcrypt.compare(req.body.pass, user[0].pass).then(match => {
@@ -165,12 +160,6 @@ app.post('/login', (req, res) => {
             res.render('login', { err });
         });
 });
-//listen
-app.listen(8080, () => console.log('listening...'));
 
-// // db query example
-// db.addSig('test first', 'test last', 'test sig')
-//     .then(() => {
-//         return db.getSigs();
-//     })
-//     .then(results => console.log(results));
+//server
+app.listen(8080, () => console.log('listening...'));
