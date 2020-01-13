@@ -67,11 +67,15 @@ app.get('/', (req, res) => {
 });
 app.post('/', (req, res) => {
     // res.send('this is the POST / route');
-    const first = req.body.first,
-        last = req.body.last,
+    const first = req.session.first,
+        last = req.session.last,
         msg = req.body.msg,
         sig = req.body.sig,
         time = new Date();
+    console.log(req.session);
+
+    console.log(first, last);
+
     // add signature from req.body into the db. then add id to a cookie. then redirect. unless there's an error, then, render home again, but with an err=true, so handlebars can render something else
     db.addSig(req.session.userId, first, last, msg, sig, time)
         .then(results => {
@@ -123,9 +127,14 @@ app.post('/register', (req, res) => {
         let first = req.body.first,
             last = req.body.last,
             email = req.body.email;
+
+        req.session.first = req.body.first;
+        req.session.last = req.body.last;
+        console.log(req.session);
         db.addUser(first, last, email, hashedPass)
             .then(({ rows }) => {
                 req.session.userId = rows[0].id;
+
                 res.redirect('/');
             })
             .catch(err =>

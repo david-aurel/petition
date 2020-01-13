@@ -3,19 +3,23 @@
 <h2>Description</h2>
 
 <a href="/signers">Click here to see all {{sigCount}} people that already signed</p></a>
+
+<p>sign below</p>
 <div class="form-wrapper">
+
     {{#if err}}
     <p>Please fill the form.</p>
     {{/if}}
+
     <form method="POST">
-        <div class="nameInputWrapper">
+        {{!-- <div class="nameInputWrapper">
             <input name='first' placeholder="first name">
             <input name='last' placeholder="last name">
-        </div>
+        </div> --}}
         <input type='hidden' name="sig">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <textarea name="msg" cols="30" rows="5" placeholder="your message"></textarea>
         <canvas></canvas>
+        <textarea name="msg" cols="30" rows="5" placeholder="your message"></textarea>
         <button>submit</button>
     </form>
 </div>
