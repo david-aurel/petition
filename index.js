@@ -21,7 +21,8 @@ const express = require('express'),
     //we use cookie session for cookies that can't be tampered with
     cookieSession = require('cookie-session'),
     helmet = require('helmet'),
-    csurf = require('csurf');
+    csurf = require('csurf'),
+    bcrypt = require('./bcrypt.js');
 
 // this configures express to use express handlebars
 app.engine('handlebars', hb());
@@ -54,11 +55,11 @@ app.get('/', (req, res) => {
     if (req.session.id) {
         res.redirect('/thanks');
     } else {
-        res.render('home', {
-            //if it's called 'main' and in /views, you could leave this out
-            //set it to 'layout: null' if you dont want to use a layout
-            layout: 'main'
-            // here you would send data to the front (home template)
+        functions.filterResults().then(names => {
+            let sigCount = names.length;
+            res.render('home', {
+                sigCount
+            });
         });
     }
 });
@@ -113,6 +114,28 @@ app.get('/signers', (req, res) => {
         .catch(err => {
             console.log(err);
         });
+});
+
+app.get('/register', (req, res) => {
+    res.render('register');
+});
+
+app.post('/register', (req, res) => {
+    bcrypt.hash(req.body.pass).then(hashedPass => {
+        let first = req.body.first,
+            last = req.body.last,
+            email = req.body.email;
+        db.addUser(first, last, email, hashedPass)
+            .then(({ rows }) => {
+                req.session.userId = rows[0].id;
+                res.redirect('/');
+            })
+            .catch(err =>
+                res.render('register', {
+                    err
+                })
+            );
+    });
 });
 
 //listen

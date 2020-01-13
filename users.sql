@@ -6,5 +6,5 @@ CREATE TABLE users
     first VARCHAR NOT NULL CHECK (first  != ''),
     last VARCHAR NOT NULL CHECK (last != ''),
     email VARCHAR NOT NULL CHECK (email != ''),
-    password VARCHAR NOT NULL CHECK (password != ''),
+    pass VARCHAR NOT NULL CHECK (pass != '')
 );

@@ -1,22 +1,23 @@
-<h2>Going trough the process of getting a job is pretty bad, he doesn't deserve this!</h2>
+<link rel="stylesheet" href="home.css">
 
-<a href="/signers">Click here to see what other people say about him</a>
-<p>Your signature will contribute to raise awareness</p>
-<div class="form-wrapper">
-    {{#if err}}
-    <p>Please fill the form.</p>
-    {{/if}}
-    <form method="POST">
-        <div class="nameInputWrapper">
-            <input name='first' placeholder="first name">
-            <input name='last' placeholder="last name">
-        </div>
-        <input type='hidden' name="sig">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <textarea name="msg" cols="30" rows="5" placeholder="your message"></textarea>
-        <canvas></canvas>
-        <button>submit</button>
-    </form>
-</div>
+<h2>Description</h2>
 
-<script src="script.js"></script>
+<a href="/signers">Click here to see all {{sigCount}} people that already signed</p>
+    <div class="form-wrapper">
+        {{#if err}}
+        <p>Please fill the form.</p>
+        {{/if}}
+        <form method="POST">
+            <div class="nameInputWrapper">
+                <input name='first' placeholder="first name">
+                <input name='last' placeholder="last name">
+            </div>
+            <input type='hidden' name="sig">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <textarea name="msg" cols="30" rows="5" placeholder="your message"></textarea>
+            <canvas></canvas>
+            <button>submit</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
