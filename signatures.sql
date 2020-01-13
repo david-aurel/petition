@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS signatures;
 CREATE TABLE signatures
 (
     id SERIAL PRIMARY KEY,
-    userId INT NOT NULL REFERENCES users(id),
+    userId INT NOT NULL,
     first VARCHAR NOT NULL CHECK (first != ''),
     last VARCHAR NOT NULL CHECK (last != ''),
     msg VARCHAR,

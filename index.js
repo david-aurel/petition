@@ -52,15 +52,17 @@ app.use(function(req, res, next) {
 app.get('/', (req, res) => {
     // res.send('this is the GET / route');
     //check if the user has an id in the cookies already, if yes, send him to the thanks page
-    if (req.session.sigId) {
-        res.redirect('/thanks');
-    } else {
+    if (!req.session.userId) {
+        res.redirect('/register');
+    } else if (!req.session.sigId) {
         functions.filterResults().then(names => {
             let sigCount = names.length;
             res.render('home', {
                 sigCount
             });
         });
+    } else {
+        res.redirect('/thanks');
     }
 });
 app.post('/', (req, res) => {
@@ -71,11 +73,9 @@ app.post('/', (req, res) => {
         sig = req.body.sig,
         time = new Date();
     // add signature from req.body into the db. then add id to a cookie. then redirect. unless there's an error, then, render home again, but with an err=true, so handlebars can render something else
-    db.addSig(first, last, msg, sig, time)
+    db.addSig(req.session.userId, first, last, msg, sig, time)
         .then(results => {
-            let id = results.rows[0].id;
-
-            req.session.sigId = id;
+            req.session.sigId = results.rows[0].id;
         })
         .then(() => {
             res.redirect('/thanks');
@@ -145,11 +145,7 @@ app.post('/login', (req, res) => {
         .then(user => {
             bcrypt.compare(req.body.pass, user[0].pass).then(match => {
                 if (match) {
-                    db.getUser(req.body.email).then(rows => {
-                        req.session.userId = rows[0].id;
-                        console.log(req.session.userId);
-                        console.log(req.session);
-                    });
+                    req.session.userId = user[0].id;
                     res.redirect('/');
                 } else {
                     res.render('login', { wrongPass: true });

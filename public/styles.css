@@ -2,3 +2,7 @@
     box-sizing: border-box;
     font-family: sans-serif;
 }
+
+footer {
+    margin-top: 50px;
+}
