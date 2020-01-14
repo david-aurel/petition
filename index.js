@@ -55,9 +55,7 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
     // console.log('this is the POST / route');
-    const first = req.session.first,
-        last = req.session.last,
-        msg = req.body.msg,
+    const msg = req.body.msg,
         sig = req.body.sig,
         time = new Date();
 
@@ -175,8 +173,10 @@ app.post('/profile', (req, res) => {
     // add info the user provided in the form to the db. all fields are optional.
     let userId = req.session.userId,
         age = req.body.age,
-        city = req.body.city,
+        city = functions.capitalizeFirstLetter(req.body.city.toLowerCase()),
         url = req.body.url;
+    console.log(city);
+
     if (age === '') {
         age = null;
     }

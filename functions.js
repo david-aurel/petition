@@ -15,6 +15,9 @@ exports.filterResults = () => {
         return filtered;
     });
 };
+exports.capitalizeFirstLetter = string => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
 // function filterResults() {
 //     db.getSigs().then(results => {
