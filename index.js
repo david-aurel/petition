@@ -171,7 +171,22 @@ app.get('/profile', (req, res) => {
 
 app.post('/profile', (req, res) => {
     // console.log('this is the POST /profile route');
-    res.redirect('/');
+    let userId = req.session.userId,
+        age = req.body.age,
+        city = req.body.city,
+        url = req.body.url;
+    if (age === '') {
+        age = null;
+    }
+
+    db.addProfile(userId, age, city, url)
+        .then(() => {
+            res.redirect('/');
+        })
+        .catch(err => {
+            console.log('err in post /profile:', err);
+            res.redirect('/profile');
+        });
 });
 
 //server

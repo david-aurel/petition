@@ -50,3 +50,10 @@ exports.getUser = email => {
         .query(`SELECT * FROM users WHERE email = $1`, [email])
         .then(({ rows }) => rows);
 };
+
+exports.addProfile = (userId, age, city, url) => {
+    return db.query(
+        `INSERT INTO user_profiles (userId, age, city, url) VALUES ($1, $2, $3, $4)`,
+        [userId, age, city, url]
+    );
+};
