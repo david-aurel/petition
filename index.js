@@ -38,7 +38,7 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', (req, res) => {
-    // console.log('this is the GET / route');
+    console.log('this is the GET / route');
     //check if the user is logged in and send him to register if not. Check if he's signed the petition, if yes, send him to the thanks page, if not, send him to sign the petition
     if (!req.session.userId) {
         res.redirect('/register');
@@ -128,7 +128,7 @@ app.post('/register', (req, res) => {
             .then(({ rows }) => {
                 req.session.userId = rows[0].id;
 
-                res.redirect('/');
+                res.redirect('/profile');
             })
             .catch(err =>
                 res.render('register', {
@@ -162,6 +162,16 @@ app.post('/login', (req, res) => {
         .catch(err => {
             res.render('login', { err });
         });
+});
+
+app.get('/profile', (req, res) => {
+    // console.log('this is the GET /profile route');
+    res.render('profile');
+});
+
+app.post('/profile', (req, res) => {
+    // console.log('this is the POST /profile route');
+    res.redirect('/');
 });
 
 //server
