@@ -21,10 +21,10 @@ const spicedPg = require('spiced-pg');
 
 const db = spicedPg('postgres:postgres:postgres@localhost:5432/petition');
 
-exports.addSig = (user_id, first, last, msg, sig, time) => {
+exports.addSig = (user_id, msg, sig, time) => {
     return db.query(
-        `INSERT INTO signatures (user_id, first, last, msg, sig, time) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`,
-        [user_id, first, last, msg, sig, time]
+        `INSERT INTO signatures (user_id, msg, sig, time) VALUES($1, $2, $3, $4) RETURNING id`,
+        [user_id, msg, sig, time]
     );
 };
 
@@ -38,8 +38,17 @@ exports.getSigs = () => {
 
 exports.getThanks = id => {
     return db
-        .query(`SELECT sig, first FROM signatures WHERE id = $1`, [id])
+        .query(
+            `SELECT sig, first FROM signatures JOIN users ON signatures.user_id = users.id WHERE user_id = $1`,
+            [id]
+        )
         .then(({ rows }) => rows);
+};
+
+exports.getSigCount = () => {
+    return db
+        .query(`SELECT sig FROM signatures`)
+        .then(({ rows }) => rows.length);
 };
 
 exports.addUser = (first, last, email, pass) => {

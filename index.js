@@ -43,10 +43,9 @@ app.get('/', (req, res) => {
     if (!req.session.userId) {
         res.redirect('/register');
     } else if (!req.session.sigId) {
-        functions.filterResults().then(names => {
-            let sigCount = names.length;
+        db.getSigCount().then(count => {
             res.render('home', {
-                sigCount
+                count
             });
         });
     } else {
@@ -63,11 +62,13 @@ app.post('/', (req, res) => {
         time = new Date();
 
     // Insert the signature into db. then add sigId to cookie and then redirect. unless there's an error, then, render home again, but with an err=true, so handlebars can render something else
-    db.addSig(req.session.userId, first, last, msg, sig, time)
+    db.addSig(req.session.userId, msg, sig, time)
         .then(results => {
             req.session.sigId = results.rows[0].id;
         })
         .then(() => {
+            console.log('tried to redirect from post / to get /thanks');
+
             res.redirect('/thanks');
         })
         .catch(err => {
@@ -80,15 +81,15 @@ app.post('/', (req, res) => {
 app.get('/thanks', (req, res) => {
     // console.log('this is the GET /thanks route');
     // render the thanks page with some info from the signature and number of total signatures
-    db.getThanks(req.session.sigId).then(thanksResults => {
-        functions.filterResults().then(names => {
-            let sigCount = names.length,
-                dataUrl = thanksResults[0].sig,
-                first = thanksResults[0].first;
+    db.getThanks(req.session.userId).then(results => {
+        db.getSigCount().then(count => {
+            let sig = results[0].sig,
+                first = results[0].first;
+            // console.log(`count: ${count}, sig: ${sig}, first: ${first}`);
 
             res.render('thanks', {
-                sigCount,
-                dataUrl,
+                count,
+                sig,
                 first
             });
         });
