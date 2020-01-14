@@ -60,7 +60,10 @@ exports.addUser = (first, last, email, pass) => {
 
 exports.getUser = email => {
     return db
-        .query(`SELECT * FROM users WHERE email = $1`, [email])
+        .query(
+            `SELECT pass, sig, email, users.id FROM users LEFT JOIN signatures ON users.id = signatures.user_id WHERE email = $1`,
+            [email]
+        )
         .then(({ rows }) => rows);
 };
 

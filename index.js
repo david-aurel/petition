@@ -108,6 +108,11 @@ app.get('/signers', (req, res) => {
         });
 });
 
+app.get('/signers:city', (req, res) => {
+    // console.log('this is the GET /signers:city route');
+    // render signers page for all signatures from one city
+});
+
 app.get('/register', (req, res) => {
     //console.log('this is the GET /register route')
     res.render('register');
@@ -120,9 +125,6 @@ app.post('/register', (req, res) => {
         let first = req.body.first,
             last = req.body.last,
             email = req.body.email;
-
-        req.session.first = req.body.first;
-        req.session.last = req.body.last;
         db.addUser(first, last, email, hashedPass)
             .then(({ rows }) => {
                 req.session.userId = rows[0].id;
@@ -147,18 +149,27 @@ app.post('/login', (req, res) => {
     //get information about the email provided from the db and check the password. if it checks out, log the user in by setting a cookie. if it doesnt, show 'wrong password'. if there isn't even a matching email in the db, show 'user doesn't exist'.
     db.getUser(req.body.email)
         .then(user => {
+            // console.log(user[0]);
+
             bcrypt.compare(req.body.pass, user[0].pass).then(match => {
                 if (match) {
                     req.session.userId = user[0].id;
-                    req.session.first = user[0].first;
-                    req.session.last = user[0].last;
-                    res.redirect('/');
+                    console.log(req.session.userId);
+                    if (user[0].sig) {
+                        console.log('redirect to /thanks');
+                        res.redirect('/thanks');
+                    } else {
+                        console.log('redirect to /');
+                        res.redirect('/');
+                    }
                 } else {
                     res.render('login', { wrongPass: true });
                 }
             });
         })
         .catch(err => {
+            console.log(err);
+
             res.render('login', { err });
         });
 });

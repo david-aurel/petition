@@ -9,11 +9,7 @@
             says "{{this.msg}}"
             {{/if}}
 
-            (
-            {{#if this.city}}
-            {{this.city}},
-            {{/if}}
-            <span class="time">{{this.time}}</span>)
+            ({{#if this.city}}{{this.city}},{{/if}}<span class="time">{{this.time}}</span>)
 
         </h4>
     </li>
