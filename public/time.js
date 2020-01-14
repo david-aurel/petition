@@ -22,6 +22,6 @@ for (let i = 0; i < text.length; i++) {
         let day = filtered[2],
             month = months[parseInt(filtered[1]) - 1],
             year = filtered[0];
-        text.eq(i).text(`(${month} ${day}, ${year})`);
+        text.eq(i).text(`${month} ${day} ${year}`);
     }
 }

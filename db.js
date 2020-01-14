@@ -21,15 +21,19 @@ const spicedPg = require('spiced-pg');
 
 const db = spicedPg('postgres:postgres:postgres@localhost:5432/petition');
 
-exports.addSig = (userId, first, last, msg, sig, time) => {
+exports.addSig = (user_id, first, last, msg, sig, time) => {
     return db.query(
-        `INSERT INTO signatures (userId, first, last, msg, sig, time) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`,
-        [userId, first, last, msg, sig, time]
+        `INSERT INTO signatures (user_id, first, last, msg, sig, time) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`,
+        [user_id, first, last, msg, sig, time]
     );
 };
 
 exports.getSigs = () => {
-    return db.query(`SELECT * FROM signatures`).then(({ rows }) => rows);
+    return db
+        .query(
+            `SELECT * FROM signatures JOIN users ON signatures.user_id = users.id JOIN user_profiles ON user_profiles.user_id = users.id`
+        )
+        .then(({ rows }) => rows);
 };
 
 exports.getThanks = id => {
@@ -51,9 +55,9 @@ exports.getUser = email => {
         .then(({ rows }) => rows);
 };
 
-exports.addProfile = (userId, age, city, url) => {
+exports.addProfile = (user_id, age, city, url) => {
     return db.query(
-        `INSERT INTO user_profiles (userId, age, city, url) VALUES ($1, $2, $3, $4)`,
-        [userId, age, city, url]
+        `INSERT INTO user_profiles (user_id, age, city, url) VALUES ($1, $2, $3, $4)`,
+        [user_id, age, city, url]
     );
 };

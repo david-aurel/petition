@@ -38,7 +38,7 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', (req, res) => {
-    console.log('this is the GET / route');
+    // console.log('this is the GET / route');
     //check if the user is logged in and send him to register if not. Check if he's signed the petition, if yes, send him to the thanks page, if not, send him to sign the petition
     if (!req.session.userId) {
         res.redirect('/register');
@@ -78,7 +78,7 @@ app.post('/', (req, res) => {
 });
 
 app.get('/thanks', (req, res) => {
-    console.log('this is the GET /thanks route');
+    // console.log('this is the GET /thanks route');
     // render the thanks page with some info from the signature and number of total signatures
     db.getThanks(req.session.sigId).then(thanksResults => {
         functions.filterResults().then(names => {
@@ -171,6 +171,7 @@ app.get('/profile', (req, res) => {
 
 app.post('/profile', (req, res) => {
     // console.log('this is the POST /profile route');
+    // add info the user provided in the form to the db. all fields are optional.
     let userId = req.session.userId,
         age = req.body.age,
         city = req.body.city,

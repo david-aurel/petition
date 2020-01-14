@@ -1,7 +1,19 @@
 {{#data}}
 <ul>
     <li>
-        <h4>{{this.first}} {{this.last}} says "{{this.msg}}" <span class="time">{{this.time}}</span>
+        <h4>
+            {{#if this.url}}<a href="{{this.url}}">{{/if}}{{this.first}} {{this.last}}{{#if this.url}}</a>{{/if}}
+
+            {{#if this.msg}}
+            says "{{this.msg}}"
+            {{/if}}
+
+            (
+            {{#if this.city}}
+            {{this.city}},
+            {{/if}}
+            <span class="time">{{this.time}}</span>)
+
         </h4>
     </li>
 
