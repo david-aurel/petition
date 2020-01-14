@@ -108,9 +108,17 @@ app.get('/signers', (req, res) => {
         });
 });
 
-app.get('/signers:city', (req, res) => {
+app.get('/signers/:city', (req, res) => {
     // console.log('this is the GET /signers:city route');
     // render signers page for all signatures from one city
+
+    db.getSigsByCity(req.params.city).then(data => {
+        // console.log(data);
+
+        res.render('signers', {
+            data
+        });
+    });
 });
 
 app.get('/register', (req, res) => {
