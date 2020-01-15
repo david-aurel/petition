@@ -1,4 +1,8 @@
 const spicedPg = require('spiced-pg');
+const db = spicedPg(
+    process.env.DATABASE_URL ||
+        'postgres:postgres:postgres@localhost:5432/petition'
+);
 const bcrypt = require('./bcrypt.js');
 
 // //     how you'd make a query and exporting it for other files to use
@@ -19,8 +23,6 @@ const bcrypt = require('./bcrypt.js');
 // exports.deleteActors = function() {
 //     return db.query(`DELETE FROM actors WHERE age = 99`);
 // };
-
-const db = spicedPg('postgres:postgres:postgres@localhost:5432/petition');
 
 exports.addSig = (user_id, msg, sig, time) => {
     return db.query(
