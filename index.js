@@ -24,22 +24,19 @@ app.use(helmet());
 // this gets the data from the form
 app.use(express.urlencoded({ extended: true }));
 // cookie session
+let secret;
 if (process.env.NODE_ENV === 'production') {
-    app.use(
-        cookieSession({
-            secret: process.env.COOKIE_SECRET,
-            maxAge: 1000 * 60 * 60 * 24 * 7 * 6
-        })
-    );
+    secret = process.env.COOKIE_SECRET;
 } else {
     const secrets = require('./secrets');
-    app.use(
-        cookieSession({
-            secret: secrets.COOKIE_SECRET,
-            maxAge: 1000 * 60 * 60 * 24 * 7 * 6
-        })
-    );
+    secret = secrets.COOKIE_SECRET;
 }
+app.use(
+    cookieSession({
+        secret: secret,
+        maxAge: 1000 * 60 * 60 * 24 * 7 * 6
+    })
+);
 //csurf and the csfr token
 app.use(csurf());
 app.use(function(req, res, next) {
