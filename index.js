@@ -1,7 +1,8 @@
 // require other scripts
 const db = require('./db'),
     functions = require('./functions'),
-    bcrypt = require('./bcrypt.js');
+    bcrypt = require('./bcrypt.js'),
+    secrets = require('./secrets');
 
 // require modules
 const express = require('express'),
@@ -24,12 +25,17 @@ app.use(helmet());
 // this gets the data from the form
 app.use(express.urlencoded({ extended: true }));
 // cookie session
-app.use(
-    cookieSession({
-        secret: `I'm always angry.`,
-        maxAge: 1000 * 60 * 60 * 24 * 7 * 6
-    })
-);
+let secret;
+if (process.env.NODE_ENV === 'production') {
+    secret = process.env;
+} else {
+    app.use(
+        cookieSession({
+            secret: secrets.COOKIE_SECRET,
+            maxAge: 1000 * 60 * 60 * 24 * 7 * 6
+        })
+    );
+}
 //csurf and the csfr token
 app.use(csurf());
 app.use(function(req, res, next) {
@@ -38,8 +44,7 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', (req, res) => {
-    console.log('this is the GET / route');
-
+    // console.log('this is the GET / route');
     //check if the user is logged in and send him to register if not. Check if he's signed the petition, if yes, send him to the thanks page, if not, send him to sign the petition
     if (!req.session.userId) {
         res.redirect('/register');
@@ -74,7 +79,7 @@ app.post('/', (req, res) => {
 });
 
 app.get('/thanks', (req, res) => {
-    console.log('this is the GET /thanks route');
+    // console.log('this is the GET /thanks route');
     // render the thanks page with some info from the signature and number of total signatures
     db.getThanks(req.session.userId).then(results => {
         db.getSigCount().then(count => {
@@ -92,7 +97,7 @@ app.get('/thanks', (req, res) => {
 });
 
 app.post('/thanks', (req, res) => {
-    console.log('this is the POST /thanks route');
+    // console.log('this is the POST /thanks route');
     db.deleteSig(req.session.userId).then(() => {
         delete req.session.sigId;
         res.redirect('/');
@@ -116,8 +121,6 @@ app.get('/signers', (req, res) => {
 app.get('/signers/:city', (req, res) => {
     // console.log('this is the GET /signers:city route');
     // render signers page for all signatures from one city
-    console.log(req.params.city);
-
     db.getSigsByCity(req.params.city).then(data => {
         // console.log(data);
 
