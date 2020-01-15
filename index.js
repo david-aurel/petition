@@ -213,7 +213,6 @@ app.post('/profile', (req, res) => {
 
 app.get('/edit', (req, res) => {
     // console.log('this is the GET /edit route');
-    console.log(req.session);
 
     db.getProfile(req.session.userId).then(data => {
         res.render('edit', {
@@ -223,8 +222,32 @@ app.get('/edit', (req, res) => {
 });
 
 app.post('/edit', (req, res) => {
-    console.log('this is the POST /edit route');
-    res.redirect('/edit');
+    // console.log('this is the POST /edit route');
+    let user_id = req.session.userId,
+        first = functions.capitalizeFirstLetter(req.body.first.toLowerCase()),
+        last = functions.capitalizeFirstLetter(req.body.last.toLowerCase()),
+        email = req.body.email,
+        pass = req.body.pass,
+        age = req.body.age,
+        city = functions.capitalizeFirstLetter(req.body.city.toLowerCase()),
+        url = req.body.url;
+
+    Promise.all([
+        db.updateUser(user_id, first, last, email),
+        db.updatePass(user_id, pass),
+        db.updateProfile(user_id, age, city, url)
+    ])
+        .then(() => {
+            res.redirect('/edit');
+        })
+        .catch(err => {
+            db.getProfile(req.session.userId).then(data => {
+                res.render('edit', {
+                    data,
+                    err
+                });
+            });
+        });
 });
 
 //server

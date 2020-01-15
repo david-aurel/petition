@@ -1,4 +1,5 @@
 const spicedPg = require('spiced-pg');
+const bcrypt = require('./bcrypt.js');
 
 // //     how you'd make a query and exporting it for other files to use
 // // spicedPg is just a wrapper for the node module for postgres. It takes a url. Here, the method, the user and the password is 'postgres'. Port is 5432. Name of db is petition.
@@ -89,4 +90,29 @@ exports.getProfile = user_id => {
             [user_id]
         )
         .then(({ rows }) => rows);
+};
+
+exports.updateUser = (user_id, first, last, email) => {
+    return db.query(
+        `UPDATE users SET first=$2, last=$3, email=$4 WHERE id = $1`,
+        [user_id, first, last, email]
+    );
+};
+
+exports.updateProfile = (user_id, age, city, url) => {
+    return db.query(
+        `INSERT INTO user_profiles (user_id, age, city, url) VALUES ($1, $2, $3, $4 ) ON CONFLICT (user_id) DO UPDATE SET age=$2, city=$3, url=$4`,
+        [user_id, age, city, url]
+    );
+};
+
+exports.updatePass = (user_id, pass) => {
+    if (pass) {
+        bcrypt.hash(pass).then(hashedPass => {
+            return db.query(`UPDATE users SET pass=$2 WHERE id=$1`, [
+                user_id,
+                hashedPass
+            ]);
+        });
+    }
 };

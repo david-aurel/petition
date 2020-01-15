@@ -2,6 +2,10 @@
 
 <h3>Edit your profile</h3>
 
+{{#if err}}
+<p>invalid input</p>
+{{/if}}
+
 {{#data}}
 <form method="POST">
     <input type="text" name="first" placeholder="first name" value="{{this.first}}">
