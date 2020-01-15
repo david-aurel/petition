@@ -1,8 +1,7 @@
 // require other scripts
 const db = require('./db'),
     functions = require('./functions'),
-    bcrypt = require('./bcrypt.js'),
-    secrets = require('./secrets');
+    bcrypt = require('./bcrypt.js');
 
 // require modules
 const express = require('express'),
@@ -25,10 +24,16 @@ app.use(helmet());
 // this gets the data from the form
 app.use(express.urlencoded({ extended: true }));
 // cookie session
-let secret;
 if (process.env.NODE_ENV === 'production') {
-    secret = process.env;
+    let secret = process.env;
+    app.use(
+        cookieSession({
+            secret: secret,
+            maxAge: 1000 * 60 * 60 * 24 * 7 * 6
+        })
+    );
 } else {
+    const secrets = require('./secrets');
     app.use(
         cookieSession({
             secret: secrets.COOKIE_SECRET,
