@@ -25,10 +25,9 @@ app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 // cookie session
 if (process.env.NODE_ENV === 'production') {
-    let secret = process.env;
     app.use(
         cookieSession({
-            secret: secret,
+            secret: process.env.COOKIE_SECRET,
             maxAge: 1000 * 60 * 60 * 24 * 7 * 6
         })
     );
