@@ -86,7 +86,6 @@ app.get('/thanks', (req, res) => {
         db.getSigCount().then(count => {
             let sig = results[0].sig,
                 first = results[0].first;
-            // console.log(`count: ${count}, sig: ${sig}, first: ${first}`);
 
             res.render('thanks', {
                 count,
@@ -123,8 +122,6 @@ app.get('/signers/:city', (req, res) => {
     // console.log('this is the GET /signers:city route');
     // render signers page for all signatures from one city
     db.getSigsByCity(req.params.city).then(data => {
-        // console.log(data);
-
         res.render('signers', {
             data
         });
@@ -138,7 +135,7 @@ app.get('/register', (req, res) => {
 
 app.post('/register', (req, res) => {
     //console.log('this is the POST /register route')
-    // salt, hash and store the password in the db, together with the rest of the inputs. also set a cookie, i.e. log the user in and add first and last to cookie.
+    // salt, hash and store the password in the db, together with the rest of the inputs. also set a cookie, i.e. log the user in.
     bcrypt.hash(req.body.pass).then(hashedPass => {
         let first = req.body.first,
             last = req.body.last,
@@ -146,7 +143,6 @@ app.post('/register', (req, res) => {
         db.addUser(first, last, email, hashedPass)
             .then(({ rows }) => {
                 req.session.userId = rows[0].id;
-
                 res.redirect('/profile');
             })
             .catch(err =>
@@ -164,7 +160,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res) => {
     //console.log('this is the POST /login route')
-    //get information about the email provided from the db and check the password. if it checks out, log the user in by setting a cookie. if it doesnt, show 'wrong password'. if there isn't even a matching email in the db, show 'user doesn't exist'.
+    //get information about the email provided from the db and check the password. if it checks out, log the user in by setting a cookie and redirect him either to sign the petition or to the thanks route, depending if he's already signed or not. if it doesnt, show 'wrong password'. if there isn't even a matching email in the db, show 'user doesn't exist'.
     db.getUser(req.body.email)
         .then(user => {
             // console.log(user[0]);
@@ -186,8 +182,6 @@ app.post('/login', (req, res) => {
             });
         })
         .catch(err => {
-            console.log(err);
-
             res.render('login', { err });
         });
 });
@@ -204,7 +198,6 @@ app.post('/profile', (req, res) => {
         age = req.body.age,
         city = functions.capitalizeFirstLetter(req.body.city.toLowerCase()),
         url = req.body.url;
-    console.log(city);
 
     if (age === '') {
         age = null;
@@ -222,7 +215,7 @@ app.post('/profile', (req, res) => {
 
 app.get('/edit', (req, res) => {
     // console.log('this is the GET /edit route');
-
+    // get info from db about the user and populate the form
     db.getProfile(req.session.userId).then(data => {
         res.render('edit', {
             data
@@ -232,6 +225,7 @@ app.get('/edit', (req, res) => {
 
 app.post('/edit', (req, res) => {
     // console.log('this is the POST /edit route');
+    // take the info from the form and update the users, the user_profiles, -and the signatures table. this is done in three queries: one for first, last and email, one for the password, and one for the age, city and url. the password query only updates, if the password provided is not empty to prevent changing the password to an empty string accidentally. if there's an error, tell the user the input provided was not valid.
     let user_id = req.session.userId,
         first = functions.capitalizeFirstLetter(req.body.first.toLowerCase()),
         last = functions.capitalizeFirstLetter(req.body.last.toLowerCase()),
