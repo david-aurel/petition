@@ -1,9 +1,5 @@
-header a {
-    text-decoration: none;
-}
-header a:visited {
-    text-decoration: none;
-    color: #000;
+.signers {
+    font-style: italic;
 }
 
 .form-wrapper {

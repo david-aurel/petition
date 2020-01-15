@@ -6,3 +6,11 @@
 footer {
     margin-top: 50px;
 }
+
+a {
+    text-decoration: none;
+}
+a:visited {
+    text-decoration: none;
+    color: #000;
+}

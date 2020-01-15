@@ -111,6 +111,7 @@ app.get('/signers', (req, res) => {
 app.get('/signers/:city', (req, res) => {
     // console.log('this is the GET /signers:city route');
     // render signers page for all signatures from one city
+    console.log(req.params.city);
 
     db.getSigsByCity(req.params.city).then(data => {
         // console.log(data);
@@ -208,6 +209,22 @@ app.post('/profile', (req, res) => {
             console.log('err in post /profile:', err);
             res.redirect('/profile');
         });
+});
+
+app.get('/edit', (req, res) => {
+    // console.log('this is the GET /edit route');
+    console.log(req.session);
+
+    db.getProfile(req.session.userId).then(data => {
+        res.render('edit', {
+            data
+        });
+    });
+});
+
+app.post('/edit', (req, res) => {
+    console.log('this is the POST /edit route');
+    res.redirect('/edit');
 });
 
 //server

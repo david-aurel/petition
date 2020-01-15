@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="/edit.css">
+
+<h3>Edit your profile</h3>
+
+{{#data}}
+<form method="POST">
+    <input type="text" name="first" placeholder="first name" value="{{this.first}}">
+    <input type="text" name='last' placeholder="last name" value='{{this.last}}'>
+    <input type="email" name='email' placeholder="email" value='{{this.email}}'>
+    <input type="password" name='pass' placeholder="new password">
+    <input type="text " name='age' placeholder="age" value='{{this.age}}'>
+    <input type="text " name='city' placeholder="city" value='{{this.city}}'>
+    <input type="text " name='url' placeholder="website" value='{{this.url}}'>
+    <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+    <button>update</button>
+</form>
+
+{{#if this.sig}}
+<a href="">delete your signature</a>
+{{else}}
+<a href="">sign the petition</a>
+{{/if}}
+
+{{/data}}

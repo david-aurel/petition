@@ -81,3 +81,12 @@ exports.addProfile = (user_id, age, city, url) => {
         [user_id, age, city, url]
     );
 };
+
+exports.getProfile = user_id => {
+    return db
+        .query(
+            `SELECT * FROM users LEFT JOIN signatures ON users.id = signatures.user_id LEFT JOIN user_profiles ON users.id = user_profiles.user_id WHERE users.id = $1`,
+            [user_id]
+        )
+        .then(({ rows }) => rows);
+};
