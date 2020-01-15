@@ -38,7 +38,6 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', (req, res) => {
-    // console.log('this is the GET / route');
     //check if the user is logged in and send him to register if not. Check if he's signed the petition, if yes, send him to the thanks page, if not, send him to sign the petition
     if (!req.session.userId) {
         res.redirect('/register');
@@ -61,17 +60,13 @@ app.post('/', (req, res) => {
 
     // Insert the signature into db. then add sigId to cookie and then redirect. unless there's an error, then, render home again, but with an err=true, so handlebars can render something else
     db.addSig(req.session.userId, msg, sig, time)
-        .then(results => {
-            req.session.sigId = results.rows[0].id;
+        .then(() => {
+            req.session.sigId = true;
         })
         .then(() => {
-            console.log('tried to redirect from post / to get /thanks');
-
             res.redirect('/thanks');
         })
         .catch(err => {
-            console.log(err);
-
             res.render('home', { err });
         });
 });
@@ -91,6 +86,14 @@ app.get('/thanks', (req, res) => {
                 first
             });
         });
+    });
+});
+
+app.post('/thanks', (req, res) => {
+    console.log('this is the POST /thanks route');
+    db.deleteSig(req.session.userId).then(() => {
+        delete req.session.sigId;
+        res.redirect('/');
     });
 });
 

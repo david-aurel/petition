@@ -45,6 +45,10 @@ exports.getSigsByCity = city => {
         .then(({ rows }) => rows);
 };
 
+exports.deleteSig = user_id => {
+    return db.query(`DELETE FROM signatures WHERE user_id = $1`, [user_id]);
+};
+
 exports.getThanks = id => {
     return db
         .query(

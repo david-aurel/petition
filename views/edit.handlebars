@@ -20,9 +20,12 @@
 </form>
 
 {{#if this.sig}}
-<a href="">delete your signature</a>
+<form action='/thanks' method='POST'>
+    <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+    <button>delete your signature</button>
+</form>
 {{else}}
-<a href="">sign the petition</a>
+<a href="/">sign the petition</a>
 {{/if}}
 
 {{/data}}
