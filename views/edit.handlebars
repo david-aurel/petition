@@ -7,7 +7,7 @@
 {{/if}}
 
 {{#data}}
-<form method="POST">
+<form class='editProfile' method="POST">
     <input type="text" name="first" placeholder="first name" value="{{this.first}}">
     <input type="text" name='last' placeholder="last name" value='{{this.last}}'>
     <input type="email" name='email' placeholder="email" value='{{this.email}}'>
@@ -20,12 +20,15 @@
 </form>
 
 {{#if this.sig}}
-<form action='/thanks' method='POST'>
+<form action='/sig/delete' method='POST'>
     <input type="hidden" name="_csrf" value="{{../csrfToken}}">
     <button>delete your signature</button>
 </form>
 {{else}}
 <a href="/">sign the petition</a>
 {{/if}}
-
+<form action='/logout' method='POST'>
+    <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+    <button>log out</button>
+</form>
 {{/data}}

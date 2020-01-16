@@ -1,32 +1,35 @@
-const db = require('./db');
-
-exports.filterResults = () => {
-    return db.getSigs().then(results => {
-        let filtered = [];
-        for (let i = 0; i < results.length; i++) {
-            let first = results[i].first;
-            let last = results[i].last;
-            let fullName = `${first} ${last}`;
-            let message = results[i].msg;
-            let time = results[i].time;
-
-            filtered.push({ fullName, message, time });
-        }
-        return filtered;
-    });
-};
 exports.capitalizeFirstLetter = string => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-// function filterResults() {
-//     db.getSigs().then(results => {
-//         let signers = [];
-//         for (let i = 0; i < results.length; i++) {
-//             signers.push(results[i].first);
-//         }
-//         console.log('signers: ', signers);
-//         return signers;
-//     });
-// }
-// filterResults();
+exports.requireLoggedOutUser = (req, res, next) => {
+    if (req.session.userId) {
+        res.redirect('/petition');
+    } else {
+        next();
+    }
+};
+
+exports.requireLoggedInUser = (req, res, next) => {
+    if (!req.session.userId) {
+        res.redirect('/');
+    } else {
+        next();
+    }
+};
+
+exports.requireSig = (req, res, next) => {
+    if (!req.session.sigId) {
+        res.redirect('/petition');
+    } else {
+        next();
+    }
+};
+
+exports.requireNoSig = (req, res, next) => {
+    if (req.session.sigId) {
+        res.redirect('/thanks');
+    } else {
+        next();
+    }
+};

@@ -1,29 +1,9 @@
-<link rel="stylesheet" href="home.css">
+<h3>He works hard and is a great social fit- <br>
+    <a href="/login">LOG IN</a>
+    or
+    <a href="/register">SIGN UP</a>
+    to help David get a job in Berlin tech and raise
+    awareness.
+</h3>
 
-<h3>He works hard and is a great social fit- Sign this petition to help David get a job in Berlin tech and raise
-    awareness.</h3>
-
-<a class='signers' href="/signers">Click here to see what all {{count}} people that already signed say about him →</p>
-    </a>
-
-<h3>Sign the petition!</h3>
-<div class="form-wrapper">
-
-    {{#if err}}
-    <p>Please fill the form.</p>
-    {{/if}}
-
-    <form method="POST">
-        {{!-- <div class="nameInputWrapper">
-            <input name='first' placeholder="first name">
-            <input name='last' placeholder="last name">
-        </div> --}}
-        <input type='hidden' name="sig">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <canvas></canvas>
-        <textarea name="msg" cols="30" rows="5" placeholder="your message"></textarea>
-        <button>submit</button>
-    </form>
-</div>
-
-<script src="script.js"></script>
+<a href='/signers'>Click here to see what all {{count}} people that already signed say about him →</a>

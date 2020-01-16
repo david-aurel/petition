@@ -1,7 +1,9 @@
 // require other scripts
 const db = require('./db'),
     functions = require('./functions'),
-    bcrypt = require('./bcrypt.js');
+    { requireLoggedInUser, requireSig, requireNoSig } = require('./functions'),
+    bcrypt = require('./bcrypt.js'),
+    router = require('./auth');
 
 // require modules
 const express = require('express'),
@@ -24,16 +26,16 @@ app.use(helmet());
 // this gets the data from the form
 app.use(express.urlencoded({ extended: true }));
 // cookie session
-let secret;
+let sessionSecret;
 if (process.env.NODE_ENV === 'production') {
-    secret = process.env.COOKIE_SECRET;
+    sessionSecret = process.env.COOKIE_SECRET;
 } else {
     const secrets = require('./secrets');
-    secret = secrets.COOKIE_SECRET;
+    sessionSecret = secrets.COOKIE_SECRET;
 }
 app.use(
     cookieSession({
-        secret: secret,
+        secret: sessionSecret,
         maxAge: 1000 * 60 * 60 * 24 * 7 * 6
     })
 );
@@ -44,24 +46,20 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.get('/', (req, res) => {
-    // console.log('this is the GET / route');
+app.use(router);
+
+app.get('/petition', requireLoggedInUser, requireNoSig, (req, res) => {
+    // console.log('this is the GET /petition route');
     //check if the user is logged in and send him to register if not. Check if he's signed the petition, if yes, send him to the thanks page, if not, send him to sign the petition
-    if (!req.session.userId) {
-        res.redirect('/register');
-    } else if (!req.session.sigId) {
-        db.getSigCount().then(count => {
-            res.render('home', {
-                count
-            });
+    db.getSigCount().then(count => {
+        res.render('petition', {
+            count
         });
-    } else {
-        res.redirect('/thanks');
-    }
+    });
 });
 
-app.post('/', (req, res) => {
-    // console.log('this is the POST / route');
+app.post('/petition', requireLoggedInUser, requireNoSig, (req, res) => {
+    // console.log('this is the POST /petition route');
     const msg = req.body.msg,
         sig = req.body.sig,
         time = new Date();
@@ -75,11 +73,11 @@ app.post('/', (req, res) => {
             res.redirect('/thanks');
         })
         .catch(err => {
-            res.render('home', { err });
+            res.render('petition', { err });
         });
 });
 
-app.get('/thanks', (req, res) => {
+app.get('/thanks', requireLoggedInUser, requireSig, (req, res) => {
     // console.log('this is the GET /thanks route');
     // render the thanks page with some info from the signature and number of total signatures
     db.getThanks(req.session.userId).then(results => {
@@ -96,11 +94,11 @@ app.get('/thanks', (req, res) => {
     });
 });
 
-app.post('/thanks', (req, res) => {
+app.post('/sig/delete', requireLoggedInUser, requireSig, (req, res) => {
     // console.log('this is the POST /thanks route');
     db.deleteSig(req.session.userId).then(() => {
         delete req.session.sigId;
-        res.redirect('/');
+        res.redirect('/petition');
     });
 });
 
@@ -126,131 +124,6 @@ app.get('/signers/:city', (req, res) => {
             data
         });
     });
-});
-
-app.get('/register', (req, res) => {
-    //console.log('this is the GET /register route')
-    res.render('register');
-});
-
-app.post('/register', (req, res) => {
-    //console.log('this is the POST /register route')
-    // salt, hash and store the password in the db, together with the rest of the inputs. also set a cookie, i.e. log the user in.
-    bcrypt.hash(req.body.pass).then(hashedPass => {
-        let first = req.body.first,
-            last = req.body.last,
-            email = req.body.email;
-        db.addUser(first, last, email, hashedPass)
-            .then(({ rows }) => {
-                req.session.userId = rows[0].id;
-                res.redirect('/profile');
-            })
-            .catch(err =>
-                res.render('register', {
-                    err
-                })
-            );
-    });
-});
-
-app.get('/login', (req, res) => {
-    //console.log('this is the GET /login route')
-    res.render('login');
-});
-
-app.post('/login', (req, res) => {
-    //console.log('this is the POST /login route')
-    //get information about the email provided from the db and check the password. if it checks out, log the user in by setting a cookie and redirect him either to sign the petition or to the thanks route, depending if he's already signed or not. if it doesnt, show 'wrong password'. if there isn't even a matching email in the db, show 'user doesn't exist'.
-    db.getUser(req.body.email)
-        .then(user => {
-            // console.log(user[0]);
-
-            bcrypt.compare(req.body.pass, user[0].pass).then(match => {
-                if (match) {
-                    req.session.userId = user[0].id;
-                    console.log(req.session.userId);
-                    if (user[0].sig) {
-                        console.log('redirect to /thanks');
-                        res.redirect('/thanks');
-                    } else {
-                        console.log('redirect to /');
-                        res.redirect('/');
-                    }
-                } else {
-                    res.render('login', { wrongPass: true });
-                }
-            });
-        })
-        .catch(err => {
-            res.render('login', { err });
-        });
-});
-
-app.get('/profile', (req, res) => {
-    // console.log('this is the GET /profile route');
-    res.render('profile');
-});
-
-app.post('/profile', (req, res) => {
-    // console.log('this is the POST /profile route');
-    // add info the user provided in the form to the db. all fields are optional.
-    let userId = req.session.userId,
-        age = req.body.age,
-        city = functions.capitalizeFirstLetter(req.body.city.toLowerCase()),
-        url = req.body.url;
-
-    if (age === '') {
-        age = null;
-    }
-
-    db.addProfile(userId, age, city, url)
-        .then(() => {
-            res.redirect('/');
-        })
-        .catch(err => {
-            console.log('err in post /profile:', err);
-            res.redirect('/profile');
-        });
-});
-
-app.get('/edit', (req, res) => {
-    // console.log('this is the GET /edit route');
-    // get info from db about the user and populate the form
-    db.getProfile(req.session.userId).then(data => {
-        res.render('edit', {
-            data
-        });
-    });
-});
-
-app.post('/edit', (req, res) => {
-    // console.log('this is the POST /edit route');
-    // take the info from the form and update the users, the user_profiles, -and the signatures table. this is done in three queries: one for first, last and email, one for the password, and one for the age, city and url. the password query only updates, if the password provided is not empty to prevent changing the password to an empty string accidentally. if there's an error, tell the user the input provided was not valid.
-    let user_id = req.session.userId,
-        first = functions.capitalizeFirstLetter(req.body.first.toLowerCase()),
-        last = functions.capitalizeFirstLetter(req.body.last.toLowerCase()),
-        email = req.body.email,
-        pass = req.body.pass,
-        age = req.body.age,
-        city = functions.capitalizeFirstLetter(req.body.city.toLowerCase()),
-        url = req.body.url;
-
-    Promise.all([
-        db.updateUser(user_id, first, last, email),
-        db.updatePass(user_id, pass),
-        db.updateProfile(user_id, age, city, url)
-    ])
-        .then(() => {
-            res.redirect('/edit');
-        })
-        .catch(err => {
-            db.getProfile(req.session.userId).then(data => {
-                res.render('edit', {
-                    data,
-                    err
-                });
-            });
-        });
 });
 
 //server

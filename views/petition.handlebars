@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="home.css">
+
+<h3>Sign the petition!</h3>
+<div class="form-wrapper">
+
+    {{#if err}}
+    <p>Please fill the form.</p>
+    {{/if}}
+
+    <form method="POST">
+        {{!-- <div class="nameInputWrapper">
+            <input name='first' placeholder="first name">
+            <input name='last' placeholder="last name">
+        </div> --}}
+        <input type='hidden' name="sig">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <canvas></canvas>
+        <textarea name="msg" cols="30" rows="5" placeholder="your message"></textarea>
+        <button>submit</button>
+    </form>
+</div>
+
+<script src="script.js"></script>
