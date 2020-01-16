@@ -127,4 +127,6 @@ app.get('/signers/:city', (req, res) => {
 });
 
 //server
-app.listen(process.env.PORT || 8080, () => console.log('listening...'));
+if (require.main == module) {
+    app.listen(process.env.PORT || 8080, () => console.log('listening...'));
+}

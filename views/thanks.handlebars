@@ -1,13 +1,9 @@
 <h1>Thank you for signing the petition, {{first}}!</h1>
 
 <img class='sigImg' src="{{sig}}" alt="image of signature">
+
 <a href="/signers">
     <h2>See all {{count}} signers</h2>
 </a>
-
-<form method='POST' action="/sig/delete">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button>Delete your signature</button>
-</form>
 
 <a href="/edit">Edit your profile</a>

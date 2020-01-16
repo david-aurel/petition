@@ -17,9 +17,9 @@ router.get('/', requireLoggedOutUser, (req, res) => {
     });
 });
 
-router.get('/register', requireLoggedOutUser, (req, res) => {
-    //console.log('this is the GET /register route')
-    res.render('register');
+router.get('/auth', requireLoggedOutUser, (req, res) => {
+    // console.log('this is the GET /auth route');
+    res.render('auth');
 });
 
 router.post('/register', requireLoggedOutUser, (req, res) => {
@@ -35,17 +35,12 @@ router.post('/register', requireLoggedOutUser, (req, res) => {
                 req.session.sigId = false;
                 res.redirect('/profile');
             })
-            .catch(err =>
-                res.render('register', {
-                    err
+            .catch(signup_err =>
+                res.render('auth', {
+                    signup_err
                 })
             );
     });
-});
-
-router.get('/login', requireLoggedOutUser, (req, res) => {
-    //console.log('this is the GET /login route')
-    res.render('login');
 });
 
 router.post('/login', requireLoggedOutUser, (req, res) => {
@@ -63,12 +58,12 @@ router.post('/login', requireLoggedOutUser, (req, res) => {
                         res.redirect('/petition');
                     }
                 } else {
-                    res.render('login', { wrongPass: true });
+                    res.render('auth', { pass_err: true });
                 }
             });
         })
-        .catch(err => {
-            res.render('login', { err });
+        .catch(login_err => {
+            res.render('auth', { login_err });
         });
 });
 

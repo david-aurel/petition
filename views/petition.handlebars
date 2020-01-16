@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="home.css">
 
-<h3>Sign the petition!</h3>
+<h3>Sign below by drawing into the signature field.</h3>
 <div class="form-wrapper">
 
     {{#if err}}
@@ -8,14 +8,10 @@
     {{/if}}
 
     <form method="POST">
-        {{!-- <div class="nameInputWrapper">
-            <input name='first' placeholder="first name">
-            <input name='last' placeholder="last name">
-        </div> --}}
         <input type='hidden' name="sig">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <canvas></canvas>
-        <textarea name="msg" cols="30" rows="5" placeholder="your message"></textarea>
+        <textarea name="msg" cols="30" rows="5" placeholder="your message (optional)"></textarea>
         <button>submit</button>
     </form>
 </div>
