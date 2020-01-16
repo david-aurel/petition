@@ -102,7 +102,7 @@ app.post('/sig/delete', requireLoggedInUser, requireSig, (req, res) => {
     });
 });
 
-app.get('/signers', (req, res) => {
+app.get('/signers', requireLoggedInUser, (req, res) => {
     // console.log('this is the GET /signers route');
     // render signers page with info from db
     db.getSigs()
@@ -116,7 +116,7 @@ app.get('/signers', (req, res) => {
         });
 });
 
-app.get('/signers/:city', (req, res) => {
+app.get('/signers/:city', requireLoggedInUser, (req, res) => {
     // console.log('this is the GET /signers:city route');
     // render signers page for all signatures from one city
     db.getSigsByCity(req.params.city).then(data => {

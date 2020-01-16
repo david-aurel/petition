@@ -12,14 +12,17 @@ router.get('/', requireLoggedOutUser, (req, res) => {
     // console.log('this is the GET / route')
     db.getSigCount().then(count => {
         res.render('home', {
-            count
+            count,
+            loggedOut: true
         });
     });
 });
 
 router.get('/auth', requireLoggedOutUser, (req, res) => {
     // console.log('this is the GET /auth route');
-    res.render('auth');
+    res.render('auth', {
+        loggedOut: true
+    });
 });
 
 router.post('/register', requireLoggedOutUser, (req, res) => {

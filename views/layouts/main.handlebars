@@ -12,9 +12,17 @@
 
 <body>
     <header>
-        <a href="/">
-            <h1 id='title'>Petition to give this man a job 👨‍💻</h1>
-        </a>
+        <a href="/">Petition to give this man a job 👨‍💻</a>
+        {{#if loggedOut}}
+        {{else}}
+        <div>
+            <a href="/edit">edit profile</a>
+            <form action='/logout' method='POST'>
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button>log out</button>
+            </form>
+        </div>
+        {{/if}}
     </header>
 
     {{{body}}}
