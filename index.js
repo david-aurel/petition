@@ -95,7 +95,7 @@ app.get('/thanks', requireLoggedInUser, requireSig, (req, res) => {
 });
 
 app.post('/sig/delete', requireLoggedInUser, requireSig, (req, res) => {
-    // console.log('this is the POST /thanks route');
+    // console.log('this is the POST /sig/delete route');
     db.deleteSig(req.session.userId).then(() => {
         delete req.session.sigId;
         res.redirect('/petition');

@@ -25,14 +25,20 @@ router.get('/', requireLoggedOutUser, (req, res) => {
     });
 });
 
-router.get('/auth', requireLoggedOutUser, (req, res) => {
+router.get('/signup', requireLoggedOutUser, (req, res) => {
     // console.log('this is the GET /auth route');
-    res.render('auth', {
+    res.render('signup', {
+        loggedOut: true
+    });
+});
+router.get('/login', requireLoggedOutUser, (req, res) => {
+    // console.log('this is the GET /auth route');
+    res.render('login', {
         loggedOut: true
     });
 });
 
-router.post('/register', requireLoggedOutUser, (req, res) => {
+router.post('/signup', requireLoggedOutUser, (req, res) => {
     //console.log('this is the POST /register route')
     // salt, hash and store the password in the db, together with the rest of the inputs. also set a cookie, i.e. log the user in.
     bcrypt.hash(req.body.pass).then(hashedPass => {
@@ -46,8 +52,9 @@ router.post('/register', requireLoggedOutUser, (req, res) => {
                 res.redirect('/profile');
             })
             .catch(signup_err =>
-                res.render('auth', {
-                    signup_err
+                res.render('signup', {
+                    signup_err,
+                    loggedOut: true
                 })
             );
     });
@@ -68,12 +75,12 @@ router.post('/login', requireLoggedOutUser, (req, res) => {
                         res.redirect('/petition');
                     }
                 } else {
-                    res.render('auth', { pass_err: true });
+                    res.render('login', { pass_err: true, loggedOut: true });
                 }
             });
         })
         .catch(login_err => {
-            res.render('auth', { login_err });
+            res.render('login', { login_err, loggedOut: true });
         });
 });
 

@@ -1,34 +1,58 @@
-<link rel="stylesheet" href="/edit.css">
-
-<h3>Edit your profile</h3>
-
-{{#if err}}
-<p>invalid input</p>
-{{/if}}
-
 {{#data}}
-<form class='editProfile' method="POST">
-    <input type="text" name="first" placeholder="first name" value="{{this.first}}">
-    <input type="text" name='last' placeholder="last name" value='{{this.last}}'>
-    <input type="email" name='email' placeholder="email" value='{{this.email}}'>
-    <input type="password" name='pass' placeholder="new password">
-    <input type="text " name='age' placeholder="age" value='{{this.age}}'>
-    <input type="text " name='city' placeholder="city" value='{{this.city}}'>
-    <input type="text " name='url' placeholder="website" value='{{this.url}}'>
-    <input type="hidden" name="_csrf" value="{{../csrfToken}}">
-    <button>update</button>
-</form>
+<div class="card mt-4 mx-auto" style="width: 50%;">
 
-{{#if this.sig}}
-<form action='/sig/delete' method='POST'>
-    <input type="hidden" name="_csrf" value="{{../csrfToken}}">
-    <button>delete your signature</button>
-</form>
-{{else}}
-<a href="/">sign the petition</a>
+    <form class="px-4 pt-4" action='/signup' method="POST">
+        {{#if err}}
+        <div class='text-danger mb-4'>Invalid input, please try again.</div>
+        {{/if}}
+        <div class="row mb-3">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="First name" name="first" value="{{first}}">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Last name" name="last" value='{{last}}'>
+            </div>
+        </div>
+
+        <div class=" form-group">
+            <input type="email" class="form-control" name="email" placeholder="Email" value='{{email}}'>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="exampleInputPassword1" name="pass"
+                placeholder="New password">
+        </div>
+
+        <br>
+
+        <div class="text-secondary mb-2">(Optional)</div>
+        <div class="form-group row">
+            <div class="col">
+                <input type="text" class="form-control" name="age" placeholder="Age" value='{{age}}'>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="city" placeholder="City" value="{{city}}">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="url" placeholder="Website" value='{{url}}'>
+            </div>
+        </div>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+        <hr class="my-4">
+
+    </form>
+    <div class="d-flex justify-content-around form-group row px-4 mb-4">
+        <div>
+            <button type="submit" class="btn btn-success">Update</button>
+        </div>
+        <div>
+            {{#if sig}}
+            <form action='/sig/delete' method='POST'>
+                <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                <button type="submit" class="btn btn-danger">Delete signature</button>
+            </form>
+        </div>
+    </div>
+</div>
 {{/if}}
-<form action='/logout' method='POST'>
-    <input type="hidden" name="_csrf" value="{{../csrfToken}}">
-    <button>log out</button>
-</form>
 {{/data}}

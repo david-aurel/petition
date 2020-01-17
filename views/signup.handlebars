@@ -1,0 +1,43 @@
+<div class="card mt-4 mx-auto" style="width: 50%;">
+
+    <form class="p-4" action='/signup' method="POST">
+        {{#if signup_err}}
+        <div class='text-danger mb-4'>This email is already taken, please try again.</div>
+        {{/if}}
+        <div class="row mb-3">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="First name" name="first">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Last name" name="last">
+            </div>
+        </div>
+
+        <div class=" form-group">
+            <input type="email" class="form-control" name="email" placeholder="Email">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="exampleInputPassword1" name="pass" placeholder="Password">
+        </div>
+
+        <br>
+
+        <div class="text-secondary mb-2">(Optional)</div>
+        <div class="form-group row">
+            <div class="col">
+                <input type="text" class="form-control" name="age" placeholder="Age">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="city" placeholder="City">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="url" placeholder="Website">
+            </div>
+        </div>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+        <hr class="my-4">
+
+        <button type="submit" class="btn btn-primary">Sign me up!</button>
+    </form>
+</div>
