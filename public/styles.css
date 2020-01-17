@@ -1,14 +1,23 @@
-* {
-    box-sizing: border-box;
-    font-family: sans-serif;
+.cursor div {
+    font-family: monospace;
 }
 
-footer {
-    margin-top: 50px;
+.cursor {
+    display: inline-block;
+    animation: blink 0.75s step-end infinite;
+    font-size: 30px;
+    font-weight: 700;
+    border-right: 4px solid #0275d8;
+    padding-right: 10px;
+    margin-bottom: 20px;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid black;
+@keyframes blink {
+    from,
+    to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #0275d8;
+    }
 }

@@ -11,10 +11,17 @@ const express = require('express'),
 router.get('/', requireLoggedOutUser, (req, res) => {
     // console.log('this is the GET / route')
     db.getSigCount().then(count => {
-        res.render('home', {
-            count,
-            loggedOut: true
-        });
+        db.getSigs()
+            .then(data => {
+                res.render('home', {
+                    count,
+                    loggedOut: true,
+                    data
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
     });
 });
 

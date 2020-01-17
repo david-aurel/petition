@@ -13,23 +13,30 @@
 </head>
 
 <body>
-    <header>
-        <a href="/">Petition to give this man a job 👨‍💻</a>
+    <nav class="d-flex justify-content-space-between navbar navbar-light bg-light">
         {{#if loggedOut}}
+        <h1>Petition to give this man a job 👨‍💻</h1>
         {{else}}
-        <div>
-            <a href="/edit">edit profile</a>
+
+        <div id="form" class="col d-flex flex-direction-row justify-content-end">
+            <form action='/edit' method='GET'>
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button class="btn btn-outline-primary mr-3">Edit profile<i class="fas fa-user-edit ml-3"></i></button>
+            </form>
             <form action='/logout' method='POST'>
                 <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                <button>log out</button>
+                <button class="btn btn-outline-primary">Log out<i class="fas fa-sign-out-alt ml-3"></i></button>
             </form>
+
         </div>
         {{/if}}
-    </header>
+    </nav>
+
 
     {{{body}}}
 
 
+    <script src="https://kit.fontawesome.com/effa1431ca.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>

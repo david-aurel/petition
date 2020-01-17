@@ -1,7 +1,43 @@
-<h3>He works hard and is a great social fit- <br>
-    <a href="/auth">Log in or sign up</a>
-    to help David get a job in Berlin tech and raise
-    awareness.
-</h3>
+<div class="jumbotron bg-white pt-4">
+    <div class="cursor">
+        <div>Hello World!</div>
+    </div>
+    <p class="lead">He works hard and is a great team fit- <br>
+        <a href="/auth">Log in </a> or <a href='auth'> sign up</a>
+        to help David get a job in Berlin tech and raise
+        awareness. </p>
+    <hr class="my-4">
+    <p>Here's what all {{count}} people that already signed say about him:</p>
+    <p>
 
-<a href='/signers'>Click here to see what all {{count}} people that already signed say about him →</a>
+        <a class="btn btn-primary" data-toggle="collapse" href="#signers">
+            See more
+        </a>
+    </p>
+    <div class="collapse" id="signers">
+        <div class="card card-body">
+            {{#data}}
+            <ul>
+                <li>
+                    <span class='text-secondary'>
+
+                        {{#if this.url}}<a href="http://{{this.url}}">{{/if}}<span class='text-primary'>{{this.first}}
+                                {{this.last}}</span>{{#if this.url}}</a>{{/if}}{{#if this.age}}, {{this.age}},{{/if}}
+
+                        {{#if this.msg}}
+                        says "<span class='text-body font-weight-bold'>{{this.msg}}"</span>
+                        {{/if}}
+
+                        ({{#if this.city}}{{this.city}}, {{/if}}<span class="time">{{this.time}}</span>)
+
+                    </span>
+                </li>
+
+            </ul>
+            {{/data}}
+
+            <script src="/time.js"></script>
+        </div>
+    </div>
+
+</div>
