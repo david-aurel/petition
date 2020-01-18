@@ -2,7 +2,7 @@
 
     <form class="p-4" action='/signup' method="POST">
         {{#if signup_err}}
-        <div class='text-danger mb-4'>This email is already taken, please try again.</div>
+        <div class='text-danger mb-4'>Something's wrong with the input, please try again.</div>
         {{/if}}
         {{#if profile_err}}
         <div class='text-danger mb-4'>Somethting's wrong with the optional information, please try again.</div>
