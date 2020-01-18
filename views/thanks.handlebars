@@ -1,9 +1,8 @@
-<h1>Thank you, {{first}}!</h1>
-
-<img class='sigImg' src="{{sig}}" alt="image of signature">
-
-<a href="/signers">
-    <h2>See all {{count}} signers</h2>
-</a>
-
-<a href="/edit">Edit your profile</a>
+<div class="card mt-4 mx-auto col-md-8">
+    <div class="jumbotron bg-white pt-4 mb-0 pb-5">
+        <p class="lead">Thank you, {{first}}! Your signature contritbutes greatly to getting David a foot in the door!
+        </p>
+        <img class='sigImg mb-5' src="{{sig}}" alt="image of signature">
+        <a href="/signers" class="btn btn-outline-primary w-100">See all {{count}} signers</a>
+    </div>
+</div>
