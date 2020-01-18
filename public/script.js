@@ -31,12 +31,12 @@ c.mousedown(e => {
     });
 });
 c.mouseup(() => {
-    var dataURL = canvas.toDataURL();
+    let dataURL = canvas.toDataURL();
     sig.val(dataURL);
     c.unbind('mousemove');
 });
 c.mouseleave(() => {
-    var dataURL = canvas.toDataURL();
+    let dataURL = canvas.toDataURL();
     sig.val(dataURL);
     c.unbind('mousemove');
 });
@@ -59,4 +59,9 @@ canvas.ontouchmove = e => {
     ctx.stroke();
     ctx.closePath();
     (x = newX), (y = newY);
+};
+
+canvas.ontouchend = () => {
+    let dataURL = canvas.toDataURL();
+    sig.val(dataURL);
 };
