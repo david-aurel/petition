@@ -9,17 +9,18 @@
     <hr class="my-4">
     <p>Here's what all {{count}} people that already signed say about him:</p>
     <p>
-        <a class="btn btn-primary" data-toggle="collapse" href="#signers">
-            See more
+        <a class="more-button btn btn-primary" data-toggle="collapse" href="#signers">
+            <span>Show</span> more
         </a>
     </p>
     <div class="collapse mt-5" id="signers">
         <table class="table table-responsive d-md-table mx-auto mt-4">
             <tbody>
                 {{#data}}
-                <tr class="row">
-                    <td class="col-md-7"><span class='text-primary'>{{first}} {{last}}</span> {{#if age}}<span
-                            class="text-secondary">({{age}})</span>{{#if msg}},{{/if}}{{/if}}{{#if msg}} says
+                <tr class="d-none d-md-inline row">
+                    <td class="col-md-7"><span class='text-primary'>{{first}} {{last}}</span>
+                        {{#if age}}<span class="text-secondary">({{age}})</span>{{#if msg}},{{/if}}{{/if}}{{#if msg}}
+                        says
                         <h5 class="d-inline font-weight-bold text-success">"{{msg}}"</h5>{{/if}}
                     </td>
                     <td class="col-md-2">{{#if url}}<div class="text-truncate"><a href="{{url}}"
@@ -30,14 +31,28 @@
                         </div>
                     </td>
                 </tr>
+                <tr class="d-md-none">
+                    <td>
+                        <span class='text-primary'>{{first}} {{last}}</span>
+                        {{#if age}}<span class="text-secondary">({{age}})</span>{{#if msg}},{{/if}}{{/if}}{{#if msg}}
+                        says
+                        <h5 class="d-inline font-weight-bold text-success">"{{msg}}"</h5>{{/if}}
+                        <br>
+                        {{#if url}}<div class="text-truncate"><a href="{{url}}" class="text-danger">{{url}}</a>
+                        </div>{{/if}}
+                        <div class="text-truncate font-italic text-warning">{{#if city}}{{city}}, {{/if}} <span
+                                class="time">{{time}}</span>
+                        </div>
+                    </td>
+                </tr>
                 {{/data}}
             </tbody>
         </table>
 
-        <script src="/time.js"></script>
     </div>
 
 
 </div>
 
+<script src="/time.js"></script>
 <script src="moreButton.js"></script>
