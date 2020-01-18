@@ -41,7 +41,7 @@ exports.getSigs = () => {
 exports.getSigsByCity = city => {
     return db
         .query(
-            `SELECT * FROM signatures JOIN users ON signatures.user_id = users.id JOIN user_profiles ON user_profiles.user_id = users.id WHERE city = $1;`,
+            `SELECT * FROM signatures JOIN users ON signatures.user_id = users.id LEFT JOIN user_profiles ON user_profiles.user_id = users.id WHERE city = $1`,
             [city]
         )
         .then(({ rows }) => rows);

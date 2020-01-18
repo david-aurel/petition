@@ -1,8 +1,11 @@
 // require other scripts
 const db = require('./db'),
-    functions = require('./functions'),
-    { requireLoggedInUser, requireSig, requireNoSig } = require('./functions'),
-    bcrypt = require('./bcrypt.js'),
+    {
+        requireLoggedInUser,
+        requireSig,
+        requireNoSig,
+        capitalizeFirstLetter
+    } = require('./functions'),
     router = require('./auth');
 
 // require modules
@@ -111,11 +114,18 @@ app.get('/signers', requireLoggedInUser, (req, res) => {
 app.get('/signers/:city', requireLoggedInUser, (req, res) => {
     // console.log('this is the GET /signers:city route');
     // render signers page for all signatures from one city
-    db.getSigsByCity(req.params.city).then(data => {
-        res.render('signers', {
-            data
+    let city = capitalizeFirstLetter(req.params.city);
+
+    db.getSigsByCity(city)
+        .then(data => {
+            res.render('signers', {
+                city,
+                data
+            });
+        })
+        .catch(err => {
+            console.log(err);
         });
-    });
 });
 
 //server

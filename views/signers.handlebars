@@ -1,9 +1,13 @@
 <div class="container pt-4 col-md-10">
+    {{#if city}}
+    <p class="lead">All signatures from {{city}}</p>
+    {{else}}
     <p class="lead">Thank you, {{first}}. Your signature is a huge contribution!</p>
     <img class='d-block sigImg mb-2' src="{{sig}}" alt="image of signature">
     <hr class="my-4">
-    <a class="btn btn-outline-primary" data-toggle="collapse" href="#signers">See all {{count}} signers</a>
+    <a class="btn btn-outline-primary" data-toggle="collapse" href="#signers">Show all {{count}} signers</a>
     <div class="collapse" id="signers">
+        {{/if}}
         <table class="table table-responsive d-md-table mx-auto mt-4">
             <tbody>
                 {{#data}}
@@ -16,7 +20,9 @@
                                 class="text-danger">{{url}}</a>
                         </div>{{/if}}</td>
                     <td class="col-md-3 font-italic text-warning">
-                        <div class="text-truncate">{{#if city}}{{city}}, {{/if}} <span class="time">{{time}}</span>
+                        <div class="text-truncate">{{#if city}}<a class='text-warning'
+                                href='/signers/{{city}}'>{{city}}</a>,
+                            {{/if}} <span class="time">{{time}}</span>
                         </div>
                     </td>
                 </tr>
