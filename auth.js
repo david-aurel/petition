@@ -49,7 +49,28 @@ router.post('/signup', requireLoggedOutUser, (req, res) => {
             .then(({ rows }) => {
                 req.session.userId = rows[0].id;
                 req.session.sigId = false;
-                res.redirect('/profile');
+            })
+            // add optional profile info
+            .then(() => {
+                let userId = req.session.userId,
+                    age = req.body.age,
+                    city = capitalizeFirstLetter(req.body.city.toLowerCase()),
+                    url = req.body.url;
+
+                if (age === '') {
+                    age = null;
+                }
+                db.addProfile(userId, age, city, url)
+                    .then(() => {
+                        res.redirect('/petition');
+                    })
+                    .catch(profile_err => {
+                        console.log('err in post /profile:', profile_err);
+                        res.render('signup', {
+                            profile_err,
+                            loggedOut: true
+                        });
+                    });
             })
             .catch(signup_err =>
                 res.render('signup', {
@@ -88,33 +109,6 @@ router.post('/logout', requireLoggedInUser, (req, res) => {
     delete req.session.userId;
     delete req.session.sigId;
     res.redirect('/');
-});
-
-router.get('/profile', requireLoggedInUser, (req, res) => {
-    // console.log('this is the GET /profile route');
-    res.render('profile');
-});
-
-router.post('/profile', requireLoggedInUser, (req, res) => {
-    // console.log('this is the POST /profile route');
-    // add info the user provided in the form to the db. all fields are optional.
-    let userId = req.session.userId,
-        age = req.body.age,
-        city = capitalizeFirstLetter(req.body.city.toLowerCase()),
-        url = req.body.url;
-
-    if (age === '') {
-        age = null;
-    }
-
-    db.addProfile(userId, age, city, url)
-        .then(() => {
-            res.redirect('/petition');
-        })
-        .catch(err => {
-            console.log('err in post /profile:', err);
-            res.redirect('/profile');
-        });
 });
 
 router.get('/edit', requireLoggedInUser, (req, res) => {
