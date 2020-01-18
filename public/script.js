@@ -3,17 +3,25 @@ let c = $('canvas'),
     canvas = document.querySelector('canvas'),
     ctx = canvas.getContext('2d');
 
+//make canvas resize to width of parent
+ctx.canvas.width = c.parent().width();
+$(window).resize(function() {
+    ctx.canvas.width = c.parent().width();
+    sig.val('');
+});
+
 c.mousedown(e => {
-    let x = e.pageX - e.target.offsetLeft,
-        y = e.pageY - e.target.offsetTop;
+    let rect = canvas.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    let y = e.clientY - rect.top;
 
     c.mousemove(e => {
-        let newX = e.pageX - e.target.offsetLeft,
-            newY = e.pageY - e.target.offsetTop;
+        let newX = e.clientX - rect.left,
+            newY = e.clientY - rect.top;
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineTo(newX, newY);
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = '#0275d8';
         ctx.stroke();
         (x = newX), (y = newY);
     });

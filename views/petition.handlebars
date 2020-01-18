@@ -1,19 +1,22 @@
-<link rel="stylesheet" href="home.css">
+<div class="card card-body col-md-6 mx-auto mt-4">
 
-<h3>Sign below by drawing into the signature field.</h3>
-<div class="form-wrapper">
 
     {{#if err}}
-    <p>Please fill the form.</p>
+    <p class="text-danger">Please fill the form.</p>
     {{/if}}
 
     <form method="POST">
-        <input type='hidden' name="sig">
+        <div class="form-group">
+            <canvas class="border" width="400"></canvas>
+            <input type='hidden' name="sig">
+        </div>
+        <div class="form-group">
+            <textarea class='w-100 md-textarea form-control' name="msg" rows="2"
+                placeholder="your message (optional)"></textarea>
+        </div>
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <canvas></canvas>
-        <textarea name="msg" cols="30" rows="5" placeholder="your message (optional)"></textarea>
-        <button>submit</button>
+        <button class="btn btn-primary w-100">submit</button>
     </form>
-</div>
 
+</div>
 <script src="script.js"></script>

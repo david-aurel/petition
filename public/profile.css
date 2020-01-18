@@ -1,8 +1,0 @@
-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 150px;
-    height: 100px;
-    margin: 20px 0 50px 0;
-}

@@ -1,7 +1,7 @@
 {{#data}}
-<div class="card mt-4 mx-auto" style="width: 50%;">
+<div class="card mt-4 mx-auto col-md-8">
 
-    <form class="px-4 pt-4" action='/signup' method="POST">
+    <form class="pt-4" action='/signup' method="POST">
         {{#if err}}
         <div class='text-danger mb-4'>Invalid input, please try again.</div>
         {{/if}}
@@ -41,7 +41,7 @@
         <hr class="my-4">
 
     </form>
-    <div class="d-flex justify-content-around form-group row px-4 mb-4">
+    <div class="d-flex justify-content-between form-group row px-4 mb-4">
         <div>
             <button type="submit" class="btn btn-success">Update</button>
         </div>
