@@ -91,7 +91,7 @@ router.post('/login', requireLoggedOutUser, (req, res) => {
                     req.session.userId = user[0].id;
                     if (user[0].sig) {
                         req.session.sigId = true;
-                        res.redirect('/thanks');
+                        res.redirect('/signers');
                     } else {
                         res.redirect('/petition');
                     }
@@ -125,13 +125,17 @@ router.post('/edit', requireLoggedInUser, (req, res) => {
     // console.log('this is the POST /edit route');
     // take the info from the form and update the users, the user_profiles, -and the signatures table. this is done in three queries: one for first, last and email, one for the password, and one for the age, city and url. the password query only updates, if the password provided is not empty to prevent changing the password to an empty string accidentally. if there's an error, tell the user the input provided was not valid.
     let user_id = req.session.userId,
-        first = capitalizeFirstLetter(req.body.first.toLowerCase()),
-        last = capitalizeFirstLetter(req.body.last.toLowerCase()),
+        first = req.body.first,
+        last = req.body.last,
         email = req.body.email,
         pass = req.body.pass,
         age = req.body.age,
         city = capitalizeFirstLetter(req.body.city.toLowerCase()),
         url = req.body.url;
+
+    if (age === '') {
+        age = null;
+    }
 
     Promise.all([
         db.updateUser(user_id, first, last, email),
@@ -139,9 +143,13 @@ router.post('/edit', requireLoggedInUser, (req, res) => {
         db.updateProfile(user_id, age, city, url)
     ])
         .then(() => {
+            console.log('here');
+
             res.redirect('/edit');
         })
         .catch(err => {
+            console.log(err);
+
             db.getProfile(req.session.userId).then(data => {
                 res.render('edit', {
                     data,

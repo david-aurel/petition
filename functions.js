@@ -28,7 +28,7 @@ exports.requireSig = (req, res, next) => {
 
 exports.requireNoSig = (req, res, next) => {
     if (req.session.sigId) {
-        res.redirect('/thanks');
+        res.redirect('/signers');
     } else {
         next();
     }

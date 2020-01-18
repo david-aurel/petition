@@ -15,15 +15,20 @@
 <body>
     <nav class="d-flex justify-content-space-between navbar navbar-expand-lg navbar-light bg-light">
         <h1>
+            {{#if loggedOut}}
+            {{else}}
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            {{/if}}
             <a href='/' class='d-inline nav-link text-body'>
                 Petition to give this man a job 👨‍💻
             </a>
         </h1>
 
+        {{#if loggedOut}}
+        {{else}}
         <div class="collapse navbar-collapse mt-2 mb-2" id="navbarSupportedContent">
 
             <div id="form" class="col d-flex flex-direction-row justify-content-end">
@@ -39,6 +44,7 @@
 
             </div>
         </div>
+        {{/if}}
     </nav>
 
 

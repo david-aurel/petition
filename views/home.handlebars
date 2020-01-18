@@ -1,4 +1,4 @@
-<div class="jumbotron bg-white pt-4">
+<div class="container pt-4 col-md-10">
     <div class="cursor">
         <div>Hello World!</div>
     </div>
@@ -9,36 +9,34 @@
     <hr class="my-4">
     <p>Here's what all {{count}} people that already signed say about him:</p>
     <p>
-
         <a class="btn btn-primary" data-toggle="collapse" href="#signers">
             See more
         </a>
     </p>
-    <div class="collapse" id="signers">
-        <div class="card card-body">
-            {{#data}}
-            <ul>
-                <li>
-                    <span class='text-secondary'>
+    <div class="collapse mt-5" id="signers">
+        <table class="table table-responsive d-md-table mx-auto mt-4">
+            <tbody>
+                {{#data}}
+                <tr class="row">
+                    <td class="col-md-7"><span class='text-primary'>{{first}} {{last}}</span> {{#if age}}<span
+                            class="text-secondary">({{age}})</span>{{#if msg}},{{/if}}{{/if}}{{#if msg}} says
+                        <h5 class="d-inline font-weight-bold text-success">"{{msg}}"</h5>{{/if}}
+                    </td>
+                    <td class="col-md-2">{{#if url}}<div class="text-truncate"><a href="{{url}}"
+                                class="text-danger">{{url}}</a>
+                        </div>{{/if}}</td>
+                    <td class="col-md-3 font-italic text-warning">
+                        <div class="text-truncate">{{#if city}}{{city}}, {{/if}} <span class="time">{{time}}</span>
+                        </div>
+                    </td>
+                </tr>
+                {{/data}}
+            </tbody>
+        </table>
 
-                        {{#if this.url}}<a href="http://{{this.url}}">{{/if}}<span class='text-primary'>{{this.first}}
-                                {{this.last}}</span>{{#if this.url}}</a>{{/if}}{{#if this.age}}, {{this.age}},{{/if}}
-
-                        {{#if this.msg}}
-                        says "<span class='text-body font-weight-bold'>{{this.msg}}"</span>
-                        {{/if}}
-
-                        ({{#if this.city}}{{this.city}}, {{/if}}<span class="time">{{this.time}}</span>)
-
-                    </span>
-                </li>
-
-            </ul>
-            {{/data}}
-
-            <script src="/time.js"></script>
-        </div>
+        <script src="/time.js"></script>
     </div>
+
 
 </div>
 

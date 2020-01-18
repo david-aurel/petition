@@ -1,21 +1,30 @@
-{{#data}}
-<ul>
-    <li>
-        <h4>
-            {{#if this.url}}<a href="http://www.{{this.url}}">{{/if}}{{this.first}}
-                {{this.last}}{{#if this.url}}</a>{{/if}}{{#if this.age}}, {{this.age}},{{/if}}
+<div class="container pt-4 col-md-10">
+    <p class="lead">Thank you, {{first}}. Your signature is a huge contribution!</p>
+    <img class='d-block sigImg mb-2' src="{{sig}}" alt="image of signature">
+    <hr class="my-4">
+    <a class="btn btn-outline-primary" data-toggle="collapse" href="#signers">See all {{count}} signers</a>
+    <div class="collapse" id="signers">
+        <table class="table table-responsive d-md-table mx-auto mt-4">
+            <tbody>
+                {{#data}}
+                <tr class="row">
+                    <td class="col-md-7"><span class='text-primary'>{{first}} {{last}}</span> {{#if age}}<span
+                            class="text-secondary">({{age}})</span>{{#if msg}},{{/if}}{{/if}}{{#if msg}} says
+                        <h5 class="d-inline font-weight-bold text-success">"{{msg}}"</h5>{{/if}}
+                    </td>
+                    <td class="col-md-2">{{#if url}}<div class="text-truncate"><a href="{{url}}"
+                                class="text-danger">{{url}}</a>
+                        </div>{{/if}}</td>
+                    <td class="col-md-3 font-italic text-warning">
+                        <div class="text-truncate">{{#if city}}{{city}}, {{/if}} <span class="time">{{time}}</span>
+                        </div>
+                    </td>
+                </tr>
+                {{/data}}
+            </tbody>
+        </table>
+    </div>
 
-            {{#if this.msg}}
-            says "{{this.msg}}"
-            {{/if}}
-
-            ({{#if this.city}}<a href='/signers/{{this.city}}'>{{this.city}}</a>, {{/if}}<span
-                class="time">{{this.time}}</span>)
-
-        </h4>
-    </li>
-
-</ul>
-{{/data}}
+</div>
 
 <script src="/time.js"></script>

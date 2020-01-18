@@ -70,28 +70,11 @@ app.post('/petition', requireLoggedInUser, requireNoSig, (req, res) => {
             req.session.sigId = true;
         })
         .then(() => {
-            res.redirect('/thanks');
+            res.redirect('/signers');
         })
         .catch(err => {
             res.render('petition', { err });
         });
-});
-
-app.get('/thanks', requireLoggedInUser, requireSig, (req, res) => {
-    // console.log('this is the GET /thanks route');
-    // render the thanks page with some info from the signature and number of total signatures
-    db.getThanks(req.session.userId).then(results => {
-        db.getSigCount().then(count => {
-            let sig = results[0].sig,
-                first = results[0].first;
-
-            res.render('thanks', {
-                count,
-                sig,
-                first
-            });
-        });
-    });
 });
 
 app.post('/sig/delete', requireLoggedInUser, requireSig, (req, res) => {
@@ -105,10 +88,19 @@ app.post('/sig/delete', requireLoggedInUser, requireSig, (req, res) => {
 app.get('/signers', requireLoggedInUser, (req, res) => {
     // console.log('this is the GET /signers route');
     // render signers page with info from db
-    db.getSigs()
-        .then(data => {
-            res.render('signers', {
-                data
+    db.getThanks(req.session.userId)
+        .then(results => {
+            db.getSigCount().then(count => {
+                let sig = results[0].sig,
+                    first = results[0].first;
+                db.getSigs().then(data => {
+                    res.render('signers', {
+                        data,
+                        count,
+                        sig,
+                        first
+                    });
+                });
             });
         })
         .catch(err => {

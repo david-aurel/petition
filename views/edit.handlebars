@@ -1,11 +1,11 @@
 {{#data}}
 <div class="card mt-4 mx-auto col-md-8">
 
-    <form class="pt-4" action='/signup' method="POST">
+    <form id='profile' class="pt-4" action='/edit' method="POST">
         {{#if err}}
         <div class='text-danger mb-4'>Invalid input, please try again.</div>
         {{/if}}
-        <div class="row mb-3">
+        <div class="row mb-3 form-group">
             <div class="col">
                 <input type="text" class="form-control" placeholder="First name" name="first" value="{{first}}">
             </div>
@@ -36,22 +36,20 @@
                 <input type="text" class="form-control" name="url" placeholder="Website" value='{{url}}'>
             </div>
         </div>
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <input type="hidden" name="_csrf" value="{{../csrfToken}}">
 
         <hr class="my-4">
-
     </form>
+
     <div class="d-flex justify-content-between form-group row px-4 mb-4">
         <div>
-            <button type="submit" class="btn btn-success">Update</button>
+            <input type='submit' form='profile' class="btn btn-success" value='Update' />
         </div>
-        <div>
-            {{#if sig}}
-            <form action='/sig/delete' method='POST'>
-                <input type="hidden" name="_csrf" value="{{../csrfToken}}">
-                <button type="submit" class="btn btn-danger">Delete signature</button>
-            </form>
-        </div>
+        {{#if sig}}
+        <form action='/sig/delete' method='POST'>
+            <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+            <button type="submit" class="btn btn-danger">Delete signature</button>
+        </form>
     </div>
 </div>
 {{/if}}
