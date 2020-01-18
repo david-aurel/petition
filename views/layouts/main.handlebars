@@ -13,23 +13,30 @@
 </head>
 
 <body>
-    <nav class="d-flex justify-content-space-between navbar navbar-light bg-light">
-        {{#if loggedOut}}
-        <h1>Petition to give this man a job 👨‍💻</h1>
-        {{else}}
+    <nav class="d-flex justify-content-space-between navbar navbar-expand-lg navbar-light bg-light">
+        <h1>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            Petition to give this man a job 👨‍💻
+        </h1>
 
-        <div id="form" class="col d-flex flex-direction-row justify-content-end">
-            <form action='/edit' method='GET'>
-                <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                <button class="btn btn-outline-primary mr-3">Edit profile<i class="fas fa-user-edit ml-3"></i></button>
-            </form>
-            <form action='/logout' method='POST'>
-                <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                <button class="btn btn-outline-primary">Log out<i class="fas fa-sign-out-alt ml-3"></i></button>
-            </form>
+        <div class="collapse navbar-collapse mt-2 mb-2" id="navbarSupportedContent">
 
+            <div id="form" class="col d-flex flex-direction-row justify-content-end">
+                <form action='/edit' method='GET'>
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                    <button class="btn btn-outline-primary mr-3">Edit profile<i
+                            class="fas fa-user-edit ml-3"></i></button>
+                </form>
+                <form action='/logout' method='POST'>
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                    <button class="btn btn-outline-primary">Log out<i class="fas fa-sign-out-alt ml-3"></i></button>
+                </form>
+
+            </div>
         </div>
-        {{/if}}
     </nav>
 
 
