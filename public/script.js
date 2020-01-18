@@ -1,7 +1,10 @@
 let c = $('canvas'),
     sig = $('input[name="sig"]'),
     canvas = document.querySelector('canvas'),
-    ctx = canvas.getContext('2d');
+    ctx = canvas.getContext('2d'),
+    rect = canvas.getBoundingClientRect(),
+    x,
+    y;
 
 //make canvas resize to width of parent
 ctx.canvas.width = c.parent().width();
@@ -10,18 +13,19 @@ $(window).resize(function() {
     sig.val('');
 });
 
+// draw with mouse
 c.mousedown(e => {
+    ctx.strokeStyle = '#0275d8';
     let rect = canvas.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
-
+    x = e.clientX - rect.left;
+    y = e.clientY - rect.top;
     c.mousemove(e => {
         let newX = e.clientX - rect.left,
             newY = e.clientY - rect.top;
+
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineTo(newX, newY);
-        ctx.strokeStyle = '#0275d8';
         ctx.stroke();
         (x = newX), (y = newY);
     });
@@ -31,3 +35,26 @@ c.mouseup(() => {
     sig.val(dataURL);
     c.unbind('mousemove');
 });
+c.mouseleave(() => {
+    var dataURL = canvas.toDataURL();
+    sig.val(dataURL);
+    c.unbind('mousemove');
+});
+
+// draw on mobile
+canvas.ontouchstart = e => {
+    ctx.strokeStyle = '#0275d8';
+    x = e.touches[0].clientX - rect.left;
+    y = e.touches[0].clientY - rect.top;
+};
+
+canvas.ontouchmove = e => {
+    let newX = e.touches[0].clientX - rect.left,
+        newY = e.touches[0].clientY - rect.top;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(newX, newY);
+    ctx.stroke();
+    ctx.closePath();
+    (x = newX), (y = newY);
+};
