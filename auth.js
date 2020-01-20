@@ -3,7 +3,8 @@ const express = require('express'),
     {
         requireLoggedOutUser,
         requireLoggedInUser,
-        capitalizeFirstLetter
+        capitalizeFirstLetter,
+        http
     } = require('./functions'),
     bcrypt = require('./bcrypt.js'),
     router = express.Router();
@@ -55,7 +56,7 @@ router.post('/signup', requireLoggedOutUser, (req, res) => {
                 let userId = req.session.userId,
                     age = req.body.age,
                     city = capitalizeFirstLetter(req.body.city.toLowerCase()),
-                    url = req.body.url;
+                    url = http(req.body.url);
 
                 if (age === '') {
                     age = null;
@@ -131,7 +132,7 @@ router.post('/edit', requireLoggedInUser, (req, res) => {
         pass = req.body.pass,
         age = req.body.age,
         city = capitalizeFirstLetter(req.body.city.toLowerCase()),
-        url = req.body.url;
+        url = http(req.body.url);
 
     if (age === '') {
         age = null;
@@ -143,8 +144,6 @@ router.post('/edit', requireLoggedInUser, (req, res) => {
         db.updateProfile(user_id, age, city, url)
     ])
         .then(() => {
-            console.log('here');
-
             res.redirect('/edit');
         })
         .catch(err => {

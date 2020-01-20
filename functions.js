@@ -33,3 +33,11 @@ exports.requireNoSig = (req, res, next) => {
         next();
     }
 };
+
+exports.http = url => {
+    if (url.startsWith('http://') || url.startsWith('https://') || url === '') {
+        return url;
+    } else {
+        return 'https://' + url;
+    }
+};
