@@ -1,18 +1,57 @@
-# Petition
+Hire me! This project marked the time where I was introduced to a more complex data flow and the dynamics of working with Node and SQL extensively.
 
-![Gif of Project](petition.gif)
+[hire-me-petition.herokuapp.com](https://hire-me-petition.herokuapp.com)
 
-**A page for signing a petition, all done with Node.js, Express and Handlebars.**
+---
 
-Hire me! Haha 😅 This project marked the time where I was introduced to a little more complex data flow and the dynamics of working with node extensively. I loved it. It was absolutely great and I had a blast. It's live on hire-me-petition.herokuapp.com, so feel free to check it out and help me find a job!
+### Backend
 
-#### Features:
+In the back a Node.js Express Server and a PostgreSQL database CRUDfully take care of things like storing user information and authentication. The platform is protected from potential SQL injections and CSURF attacks. When a user signs, rather than storing an image, the raw data string is stored. This helps reduce file size and later, when displaying the signature again, it makes sure there are no pixelated signatures. Express-Handlebars is used to render different HTML templates.
 
-- Node Express and SQL database backend
-- Authentication with Node, Bcrypt and Cookie-Session, where the cookies are protected from malicious tampering with using a csurf package
-- Edit profile functionality
-- Signature, using a HTML Canvas Element and Javascript
-- See other signers name, age, city, message etc.
-- Delete your signature functionality
+![img](./readme_images/start.jpg)
 
-- Styled using Bootstrap 4
+---
+
+### See who already signed
+
+View other signers name, age, city, message, and website. You can also sort by city when including `/berlin` etc. in the URL.
+
+![img](./readme_images/start2.jpg)
+
+---
+
+### Authentication
+
+Authentication is accomplished using Node.js, Bcrypt and cookies.
+
+![img](./readme_images/signup.jpg)
+
+If something went wrong, an error message will alert the user.
+
+![img](./readme_images/error.jpg)
+
+---
+
+### Sign the petition
+
+Provide a signature by drawing into the HTML `<canvas>` element. Touchevents have been set up to make signing possible on mobile as well. The logic was written in JavaScript jQuery.
+
+![img](./readme_images/sign.jpg)
+
+After successfully signing, the user is shown his signature as well as a list of everybody else who signed.
+
+![img](./readme_images/sign2.jpg)
+
+---
+
+### Edit your profile, delete your signature
+
+![img](./readme_images/edit.jpg)
+
+---
+
+### Frontend
+
+Using Handlebars, information from the server is being displayed. Attempting to learn a new skill, these pages were entirely styled mobile first with Bootstrap 4.
+
+---
