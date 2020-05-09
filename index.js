@@ -4,7 +4,7 @@ const db = require('./db'),
         requireLoggedInUser,
         requireSig,
         requireNoSig,
-        capitalizeFirstLetter
+        capitalizeFirstLetter,
     } = require('./functions'),
     router = require('./auth');
 
@@ -39,24 +39,26 @@ if (process.env.NODE_ENV === 'production') {
 app.use(
     cookieSession({
         secret: sessionSecret,
-        maxAge: 1000 * 60 * 60 * 24 * 7 * 6
+        maxAge: 1000 * 60 * 60 * 24 * 7 * 6,
     })
 );
 //csurf and the csfr token
 app.use(csurf());
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.locals.csrfToken = req.csrfToken();
     next();
 });
+// disable x-frame-options
+app.use(helmet.frameguard({ action: 'deny' }));
 
 app.use(router);
 
 app.get('/petition', requireLoggedInUser, requireNoSig, (req, res) => {
     // console.log('this is the GET /petition route');
     //check if the user is logged in and send him to register if not. Check if he's signed the petition, if yes, send him to the thanks page, if not, send him to sign the petition
-    db.getSigCount().then(count => {
+    db.getSigCount().then((count) => {
         res.render('petition', {
-            count
+            count,
         });
     });
 });
@@ -75,7 +77,7 @@ app.post('/petition', requireLoggedInUser, requireNoSig, (req, res) => {
         .then(() => {
             res.redirect('/signers');
         })
-        .catch(err => {
+        .catch((err) => {
             res.render('petition', { err });
         });
 });
@@ -92,21 +94,21 @@ app.get('/signers', requireLoggedInUser, (req, res) => {
     // console.log('this is the GET /signers route');
     // render signers page with info from db
     db.getThanks(req.session.userId)
-        .then(results => {
-            db.getSigCount().then(count => {
+        .then((results) => {
+            db.getSigCount().then((count) => {
                 let sig = results[0].sig,
                     first = results[0].first;
-                db.getSigs().then(data => {
+                db.getSigs().then((data) => {
                     res.render('signers', {
                         data,
                         count,
                         sig,
-                        first
+                        first,
                     });
                 });
             });
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
         });
 });
@@ -117,13 +119,13 @@ app.get('/signers/:city', requireLoggedInUser, (req, res) => {
     let city = capitalizeFirstLetter(req.params.city);
 
     db.getSigsByCity(city)
-        .then(data => {
+        .then((data) => {
             res.render('signers', {
                 city,
-                data
+                data,
             });
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
         });
 });
